@@ -467,7 +467,7 @@ void print_lowl(struct llist *items);
 void print_lowl_st(int statement, void *ptr);
 
 void print_def_block(struct llist *items, void func());
-void print_external(struct external *this);
+void print_external(struct external *this_);
 
 void print_svalue(char *svalue);
 
@@ -599,7 +599,7 @@ get_literal_def(struct vex *vex_in);
 Llist *
 find_literal(Llist *defs);
 
-char *
+void *
 get_all_literals(struct llist *literals, char *str[]);
 
 void *
