@@ -31,7 +31,8 @@
 
 ! History.
 
-! 2018Sep11.  JMGipson.  First version.  sort-of taken from proc_dbbc_pfb_tracks. 
+! 2020-12-31   JMGipson.  Added support for DBBC3_DDD.  In this case bit-mask is NULL. 
+! 2018-09-11.  JMGipson.  First version.  sort-of taken from proc_dbbc_pfb_tracks. 
 !
 
        implicit none
@@ -48,8 +49,12 @@
 
 !For fila10g, then have 64 bit masks. Else it is 32 bit. 
       if(kfila10g_rack) then
+!Both masks are NULL.  Don't write them out.  
+        if(imask_lo .eq. 0 .and. imask_hi .eq. 0) then 
+          write(cbuf,'(a,"=,,,,",f9.3)')
+     >      'fila10g_mode', samprate   
 ! Don't write high order mask.  
-        if(imask_hi .eq. 0) then
+        else if(imask_hi .eq. 0) then
           write(cbuf,'(a,"=,0x",z8.8,",,",f9.3)')
      >      'fila10g_mode', imask_lo,samprate                 
         else
@@ -63,7 +68,10 @@
 
     
       if(lmode_cmd .eq. "bit_streams") then
-        if(imask_hi .eq. 0) then 
+        if(imask_lo .eq. 0 .and. imask_hi .eq. 0) then 
+         write(cbuf,'(a,"=,,,,")')
+     >      lmode_cmd
+        else if(imask_hi .eq. 0) then 
           write(cbuf,'(a,"=",",0x",Z8.8,",,,")')
      >      lmode_cmd, imask_lo
         else
@@ -71,7 +79,10 @@
      >      lmode_cmd, imask_hi,imask_lo
         endif
       else 
-        if(imask_hi .eq. 0) then 
+        if(imask_lo .eq. 0 .and. imask_hi .eq. 0) then 
+          write(cbuf,'(a,"=",a,",,,",f9.3)')
+     >      lmode_cmd,lext_vdif, samprate
+        else if(imask_hi .eq. 0) then 
           write(cbuf,'(a,"=",a,",0x",Z8.8,",,",f9.3)')
      >      lmode_cmd,lext_vdif, imask_lo,samprate
         else 

@@ -32,20 +32,24 @@ C  INPUT:
 ! local
       integer isb,ibit,ihd,ichan,it
       integer i
+      open(11, file="debug.out") 
+      write(11,'(a)')"  sb  bit hd chan trk num"
 
       nchan_obs=0
       do isb=1,2
         do ibit=1,2
           do ihd=1,max_headstack
             do ichan=1,max_chan
-              it = itras(isb,ibit,ihd,ichan,ipass,istn,icode)
+              it = itras(isb,ibit,ihd,ichan,ipass,istn,icode)              
               if (it.ne.-99) then
                  nchan_obs=nchan_obs+1
+                 write(11,'(6i4)') isb,ibit,ihd,ichan,it, nchan_obs
               endif
             enddo
           enddo
         enddo
       enddo
+      close(11) 
 ! At this point have the number of tracks observed
       nchan_rec_mk5=8                 !can only record in units of 8,16, 32,64
       do i=1,4

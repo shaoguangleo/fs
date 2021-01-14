@@ -32,6 +32,7 @@
 
 ! History
 ! Now most recent at the top.
+! 2020-12-30 JMG. Get lmode_cmd  from subroutine=proc_get_mode_vdif
 !
 ! 2018Sep10 JMGipson. Changed logic to make more transparent.
 !
@@ -48,7 +49,7 @@
       integer num_out     !number written out
       integer nch         !character  location
       integer i           !counter
-
+  
       integer*4 itemp
       integer*4 imask(2)  !Mask can be 64 bits long.
       integer*4 imask_lo, imask_hi
@@ -64,16 +65,8 @@
       character*3  ltmp_array(32)
       integer      ikey(32)
 
-      lext_vdif="ext"
-      if(km5brec(1)) then
-         lmode_cmd="mk5b_mode"
-      else if(km5Crec(1)) then
-         lmode_cmd="mk5c_mode"
-         if(kfila10g_rack) lext_vdif="vdif"
-      else
-         lmode_cmd="bit_streams"
-      endif
-
+      call proc_get_mode_vdif(cstrec(istn,1),kfila10g_rack,
+     &     lmode_cmd, lext_vdif)
 !
 ! Make the bit-mask.
 ! Initialize mask.

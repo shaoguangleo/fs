@@ -28,6 +28,14 @@ C
       include '../skdrincl/broadband.ftni'
       include '../skdrincl/freqs.ftni'
       include '../skdrincl/skobs.ftni'
+
+!Updates. Most recent at top
+! 2021-01-05 JMG Replaced max_frq by max_code. (Max_frq was confusing and led to coding errors.)
+! 2020-06-08 JMG Initialized various broadband values. 
+! 2020-06-08 JMG Added reference to broadband.ftni 
+
+! 2019-11-20 WEH Fixed bug in index
+! 2019-08-22 JMG. Initialized lcode here and not in frinit. 
 C
 C 990921 nrv New. Copied from skini. Code moved here from fdrudg.f
 C            Generally these are variables that have fixed values
@@ -52,10 +60,7 @@ C 2003Jul23  JMG   Added Mk5PigW
 ! 2007Jul02  JMG. Removed initialization of fluxes. Done elsewhere.
 ! 2007Aug07  JMG. Moved rack, recorder type initialization to block data statement in
 !                 "valid_hardware.f"
-! 2019Aug22  JMG. Initialized lcode here and not in frinit. 
-! 2019Nov20  WEH. Fixed bug in index
-! 2020Jun08  JMG. Initialized various broadband values. 
-! 2020Jun08  JMG Added reference to broadband.ftni 
+
 C
 C LOCAL
       integer ix,ib,i,j,l,itx,ity,itz,idef,iy,ir
@@ -159,7 +164,7 @@ C  In statn.ftni
         tape_allocation(i)='SCHEDULED'
         tape_length(i)=0
         ibitden_save(i)=0.0
-        do j=1,max_frq
+        do j=1,max_code
           bitdens(i,j)=0.0
           tape_dens(i,j)=0.0
           do l=1,max_bbc
@@ -265,7 +270,7 @@ C Initialize to zero
 C Initialize non-standard roll tables to -99.
       call init_iroll_def()
 
-      do i=1,max_frq
+      do i=1,max_code
         lcode(i)=0
         do j=1,max_stn
           iroll_inc_period(j,i) = 0

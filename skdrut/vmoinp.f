@@ -24,6 +24,11 @@ C     This routine gets all the mode information from the vex file.
 C     Call once to get all values in freqs.ftni filled in, then call
 C     SETBA to figure out which frequency bands are there.
 C
+!Updates
+! 2021-01-05 JMG Replaced max_frq by max_code. (Max_frq was confusing and led to coding errors.)
+! 2020-12-30 JMG Removed unused variables
+! 2020-10-03 JMG Removed references to headstacks, passes, tapes
+! 2019-09-03 JMG Implicit none
 C History
 C 960518 nrv New.
 C 960522 nrv Revised.
@@ -69,8 +74,7 @@ C 021111 jfq Extend S2 mode to support LBA rack
 ! 2018Oct09  Preserve mode and band if VEX created from sked previously.  Previously was setting to numerical value, first mode=
 !            Also keep better track of number of  freq-channels. If everything except for side-band is the same, assume same fre
 !            which means use same BBC.
-! 2019Sep03  Implicit none
-! 2020Oct03  Removed references to headstacks, passes, tapes
+
 
       include '../skdrincl/skparm.ftni'
       include '../skdrincl/freqs.ftni'
@@ -99,20 +103,15 @@ C  LOCAL:
       integer iinc,ireinit
       integer ifanfac
 
-
       integer irtrk(18,max_roll_def)
-      integer ih
 
       double precision bitden_das
-      integer nsubpass,npcaldefs,nrdefs,nrsteps
-      integer nchdefs,nbbcdefs,nifdefs,nfandefs,nhd,nhdpos
+      integer npcaldefs,nrdefs,nrsteps
+      integer nchdefs,nbbcdefs,nifdefs,nfandefs,nhdpos
 
       character*8 cpre
-      character*16 cs2m
       character*16 cm
-      character*8 cs2d
 
-      double precision bitden
       character*4 cmodu, croll ! ON or OFF
 
 ! IF related parameters.
@@ -183,9 +182,9 @@ C  LOCAL:
       iret = fget_mode_def(ptr_ch(cout),len(cout),ivexnum) ! get first one
       do while (iret.eq.0.and.fvex_len(cout).gt.0)
         il=fvex_len(cout)
-        IF  (ncodes.eq.MAX_FRQ) THEN  !
+        IF  (ncodes.eq.max_code) THEN  !
           write(lu,'("VMOINP01 - Too many modes.  Max is ",
-     .    i3,".  Ignored: ",a)') MAX_FRQ,cout(1:il)
+     .    i3,".  Ignored: ",a)') max_code,cout(1:il)
         else
           ncodes=ncodes+1
           modedefnames(ncodes)=cout
@@ -233,7 +232,7 @@ C    Assign a code to the mode and the same to the name
 !        write(ccode(icode)(1:2),'(i2.2)') icode
 !        cnafrq(icode)=ccode(icode)
 ! End old way of assigning codes.
-        do istn=1,nstatn ! for one station at a time
+        do istn=1,nstatn ! for one station at a time  
 
 ! Initialize this array.
           call new_track_map()

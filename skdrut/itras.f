@@ -39,7 +39,7 @@
 ! This returns the track number assigned to this combination if there is one.
 ! If not, it returns -99.
 ! Originally (pre 2001) this information was stored in an array of dimension
-! 2*2*Max_head*Max_chan*Max_stn*max_pass*Max_frq--which was huge
+! 2*2*Max_head*Max_chan*Max_stn*max_pass*max_code--which was huge
 ! =2*2*2      *32      *30     *(14*36) *20 =77,414,400 entries.
 ! This can be simplified considerably when you consider that
 ! A) For most codes, many stations share the same track assignments.
@@ -95,7 +95,6 @@
 ! local
       integer*4 imagic    !magic number. Unique number for (isb,ibit,ichn,ipass)
       integer imap
-      integer itrack 
 ! Return track that this is written on, or -99 if no track.
 
 ! Check to see if this mode has been defined for this station.
@@ -137,6 +136,7 @@
       integer ihd,itrack,ibit
 ! Set all of 'itrack_map' to -99=not recorded. 
       kdebug_itras=.false. 
+!      write(*,*) "kdebug ",kdebug_itras      
 
       do ihd=1,max_headstack
         do ibit=1,2
@@ -144,9 +144,9 @@
             itrack_map(ibit,ihd,itrack)=-99
           end do
         end do 
-      end do
-!      write(*,*) "New map"
+      end do 
       if(kdebug_itras) then 
+!          open(11,file="itras.dbg") 
           write(*,'(a)') 
      &      "   Trk Magic    SB   Bit   Chan   Pass" 
       endif 
@@ -157,7 +157,7 @@
       max_tracks_new =0
       num_pass_new=0
       num_head_new=0
-      num_bits_new=0
+      num_bits_new=0   
       return
       end
 ! ************************************************************   
@@ -172,6 +172,7 @@
      >   "ITRAS(add_Track):  Track is already used in this mode!"
          stop
       endif  
+
       itrack_map(ibit,ihead,itrack)=itras_magic(isb,ibit,ichan,ipas)
 
       if(kdebug_itras) then 
@@ -199,6 +200,7 @@
       integer imap                !counters over track_maps
       integer ibit,ihd,itrack     !indices
 
+      if(kdebug_itras) close(11) 
 ! If it was already added, return. 
       if(itrack_map_key .ne. 0) then
 !        write(*,*) "Previous map " 
@@ -245,13 +247,11 @@
         itrack_map_vec(ibit,ihd,itrack,imap)=itrack_map(ibit,ihd,itrack)
       end do
       end do
-      end do           
+      end do       
+!      write(*,*) "ITRAS. Added track map #:", imap     
 
 
-200   continue     
-      if(kdebug_itras) then 
-        write(*,*) "Added map: ", imap
-      endif
+200   continue          
       istn_code_key(istn,icod)=imap
       itrack_map_key=imap 
      
@@ -352,15 +352,15 @@
       include 'itras_cmn.ftni'
 
       integer ihead
-      integer istn,ifrq
+      integer istn,icode
 
       num_track_map=0
   
       do ihead=1,max_headstack
       do istn=1,max_stn
         khead(ihead,istn)=.false.
-        do ifrq=1,max_frq
-          istn_code_key(istn,ifrq)=0
+        do icode=1,max_code
+          istn_code_key(istn,icode)=0
         end do
       end do
       end do

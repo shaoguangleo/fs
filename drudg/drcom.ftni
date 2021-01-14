@@ -1,8 +1,9 @@
 C  Common Block statement for DRUDG
 ! Newer changes now at top
-! 2020Jun30   Got rid of kmissing (see if pass information is absent)
-! 2019Aug25.  Added imark6_off to support broadband
-! 2019Aug21.  Got rid of iperm which whas not used
+! 2020-12-30  JMG Added in setup_prompt 
+! 2020-06-30  JMG Got rid of kmissing (see if pass information is absent)
+! 2019-08-25  JMG Added imark6_off to support broadband
+! 2019-08-21  JMG Got rid of iperm which whas not used
 C
 C  MWH 890518 Changed file names to character
 C             Added Fmp call declarations
@@ -71,29 +72,30 @@ c
      >       klo_config,ktarget_time,kignore_Mark5b_bad_mask,
      >       kcont_cal 
 
+
+! Rearranged so that definitiona nd common block statments in the same order. 
+      integer*2 IBUF(ibuf_len)
+      character*(2*ibuf_len) cbuf
+      equivalence (cbuf,ibuf)
+
       CHARACTER*128 LSKDFI,SNPNAME,CINNAME,COUTNAME,
      .  lstname,tmpname,pntname,ctmpnam,prcname,cprtlan,cprtpor,
      .  cprttyp,cprport,cprtlab,clabtyp,labname,ctextname
 
-      character*4 tpid_prompt, cont_cal_prompt,lvsi_align_prompt
-      character*4 cont_cal_Polarity
-
       character*2 cpaper_size
-      character*2 coption
+      character*2 coption(3)
       character*6 cpid
       character*4 cepoch
-      integer*2 IBUF(ibuf_len)
-      character*(2*ibuf_len) cbuf
-      equivalence (cbuf,ibuf)
-    
 
+      character*4 lsetup_prompt,tpid_prompt,lvsi_align_prompt
+      character*4 cont_cal_prompt,cont_cal_Polarity   
+     
       COMMON/DRCOM_CH/cbuf, LSKDFI,SNPNAME,CINNAME,COUTNAME,
-     .    lstname,TMPNAME,pntname,ctmpnam,prcname,cprtlan,cprtpor,
-     .    cprttyp,cprport,cpid,cprtlab,cepoch,clabtyp,labname,
-     >    cpaper_size,coption(3),ctextname,
-     >    tpid_prompt,cont_cal_prompt,cont_cal_polarity,
-     >    lvsi_align_prompt
-
+     >    lstname,tmpname,pntname,ctmpnam,prcname,cprtlan,cprtpor,
+     >    cprttyp,cprport,cprtlab,clabtyp,labname,ctextname,
+     >    cpaper_size,coption,cpid,cepoch,
+     >    lsetup_prompt,tpid_prompt,lvsi_align_prompt,
+     >    cont_cal_prompt,cont_cal_Polarity
 
       double precision RA50(max_cel),DEC50(max_cel)
       real rlabsize(6)

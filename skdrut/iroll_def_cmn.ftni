@@ -39,13 +39,14 @@
 ! Common array that holds different track assignments.
 ! This is modified to make things faster (presumably)
 !
-      include "../skdrincl/skparm.ftni"  !need for max_frq,max_stn
+! 2021-01-05 JMG Replaced max_frq by max_code. (Max_frq was confusing and led to coding errors.)
+      include "../skdrincl/skparm.ftni"  !need for max_code,max_stn
 
       integer max_rolls,num_rolls
       parameter (max_rolls=64)          !how many distinct barrell rolls?
       integer nbrl_steps(max_rolls)
       integer nbrl_defs(max_rolls)
-      integer iroll_type(max_stn,max_frq)
+      integer iroll_type(max_stn,max_code)
 
       integer ibrl_roll(18,32,max_rolls)  !
 

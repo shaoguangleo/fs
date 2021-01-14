@@ -52,12 +52,12 @@ OBJECTS=\
     slewo.o soinp.o speed.o  splitntokens.o splitntokens2.o squeezeleft.o stape.o stinp.o sunarc.o \
     sunpo.o sunazel.o \
     ttape.o timesub.o timeadd.o tmadd.o tmsub.o trimlen.o tspin.o \
-    unpbar.o unpco.o unpfsk.o unpfcat.o unpfmt.o unphd.o unplo.o  unprat.o \
+    unpbar.o unpco.o unpfsk.o unpfcat.o unpfmt.o unplo.o  unprat.o \
     unpva.o unpvh.o unpvp.o unpvt.o update_string_list.o upper.o \
     valid_hardware_blk.o \
     vunpfrq.o vunptrk.o vunpant.o vunpdas.o vunpsit.o vunpant.o vglinp.o vunpso.o \
-    vunpif.o vunpbbc.o vunptrk.o vunphp.o vsoinp.o vmoinp.o vstinp.o vread.o \
-    vunps2g.o vunproll.o vunpprc.o vobinp.o  vunppcal.o \
+    vunpif.o vunpbbc.o vunptrk.o vsoinp.o vmoinp.o vstinp.o vread.o \
+    vunproll.o vunpprc.o vobinp.o  vunppcal.o \
     write_return_if_needed.o \
     write_error_and_pause.o \
     writf_asc.o \

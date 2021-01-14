@@ -23,6 +23,10 @@
 C  This routine gets all the observations from the vex file.
 C
 C History
+! Update now in reverse order
+! 2020-12-30 JMG Removed some obsolete code
+! 2019-11-20 WEH Changed f77 line to f90 for backward compatibility
+! 2019-08-27 JMG Fixed bug in converting date. Need to initialize istart because conversion routine is only setting lower bytes
 C 000606 nrv Re-new. Copied from VOB1INP.
 C 001109 nrv New again. Use new vex parser routines to get
 C            observations scan by scan.
@@ -35,9 +39,6 @@ C            observations scan by scan.
 ! 2014Sep16 JMG. Fixed a bug introduced in 2014Jul08.  Previously would generate a new scan for each 
 !                station in a scan because kfirst_staiton was always getting reinitialized. 
 !                Moved initialization out of station loop. 
-! 2019Aug27 JMG. Fixed bug in converting date. Need to initialize istart because conversion routine is only setting lower bytes
-! 2019Nov20 WEH. Changed f77 line to f90 for backward compatibility
-
       include '../skdrincl/skparm.ftni'
       include '../skdrincl/freqs.ftni'
       include '../skdrincl/sourc.ftni'
@@ -78,8 +79,7 @@ C  LOCAL:
       integer iii
       double precision d,start_sec
       integer idstart,idend
-      logical ks2
-
+  
       character*128 ldata_transfer_method
       integer ixfer_cnt
       integer istat
@@ -195,7 +195,6 @@ C       Now get each station line that is part of this scan.
             return
           endif ! code not defined
 
-          ks2=cstrec(istn,1)(1:2).eq."S2"
           ierr = 2 ! data start
           iret = fvex_field(2,ptr_ch(cout),len(cout))
           if (iret.ne.0) return
@@ -217,12 +216,9 @@ C       Keep good data offset and duration separate
           iret = fvex_field(4,ptr_ch(cout),len(cout))
           if (iret.ne.0) return
           iret = fvex_units(ptr_ch(cunit),len(cunit))
-          iret = fvex_double(ptr_ch(cout),ptr_ch(cunit),d)
-          if (ks2) then 
-            ifeet = d ! leave as seconds
-          else 
-            ifeet = d*100.d0/(2.54*12.d0) ! convert mks to feet
-          endif
+          iret = fvex_double(ptr_ch(cout),ptr_ch(cunit),d)       
+          ifeet = d ! leave as seconds
+     
           ierr = 5 ! pass
           iret = fvex_field(5,ptr_ch(cout),len(cout))
           if (iret.ne.0) return

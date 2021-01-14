@@ -20,7 +20,7 @@
       integer function iroll_def(istep,idef,istn,icode)
       implicit none  !2020Jun15 JMGipson automatically inserted.
 
-      include '../skdrincl/iroll_def_cmn.ftni'
+      include 'iroll_def_cmn.ftni'
 
 ! passed variables.
       integer istep
@@ -39,12 +39,13 @@
       end
 ! *********************************************************
       subroutine init_iroll_def()
-      include '../skdrincl/iroll_def_cmn.ftni'
+      include 'iroll_def_cmn.ftni'
+! 2021-01-05 JMG Replaced max_frq by max_code. (max_frq was confusing and led to coding errors.)
       integer istn,icode
       num_rolls=0
 
       do istn=1,max_stn
-      do icode=1,max_frq
+      do icode=1,max_code
          iroll_type(istn,icode)=0
       end do
       end do
@@ -53,7 +54,7 @@
       end
 ! ************************************************************
       subroutine init_roll_type(istn,icode,ndefs,nsteps,irtrk)
-      include '../skdrincl/iroll_def_cmn.ftni'
+      include 'iroll_def_cmn.ftni'
 
 ! passed
       integer istn,icode,ndefs,nsteps
@@ -86,7 +87,7 @@
      >    "Init_roll_type: Exhausted number of allowed barrel rolls!"
         write(*,*) "Current maximum is: ", max_rolls
         write(*,*)
-     >    "Change max_rolls in skdrincl/iroll_def_cmn.ftni"
+     >    "Change max_rolls in iroll_def_cmn.ftni"
         stop
        endif
 

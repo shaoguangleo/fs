@@ -683,7 +683,7 @@ C  if it was not set by the schedule.
      >           "WARNING! Using equipment from skedf.ctl:"
               write(luscn,  '(5x,"Replacing rack ",a," by ", a)')
      >          cstrack(istn), crack_type_def
-              do i=1,2
+              do i=1,1
                 write(luscn,'(5x,"Replacing rec",i1,5x, a, " by ",a)')
      >              i, cstrec(istn,i), crec_def(i)
               end do
@@ -718,11 +718,9 @@ C       Are the equipment types now known?
      >    (cstrec(istn,1).eq.'unknown'.or. cstrack(istn) .eq. 'unknown')
           if (kknown) then  ! write equipment
             write(luscn,9069)
-     >       cstnna(istn), cstrack(istn), cstrec(istn,1), cstrec(istn,2)
+     >       cstnna(istn), cstrack(istn), cstrec(istn,1)
 9069        format(/' Equipment at ',a,':'/'   Rack: ',a,
-     .       ' Recorder 1: ',a,' Recorder 2: ',a)
-            if (nrecst(istn).eq.2) write(luscn,9070) cfirstrec(istn)
-9070        format(' Schedule will start with recorder ',a1,'.')
+     >       ' Recorder 1: ',a) 
           else
             write(luscn,9169) cstnna(istn)
 9169        format(/' Equipment at ',a,' is unknown. Use Option 11',

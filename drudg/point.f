@@ -55,7 +55,6 @@ C LOCAL:
       integer*2 LPROC(4) !  The procedure name for NRAO
          integer nchar,itnum
       real dut,eeq
-      integer ih
       integer*2 LSNAME(max_sorlen/2),LSTN(MAX_STN),LCABLE(MAX_STN),
      .          LMON(2),LDAY(2),LPRE(3),LMID(3),LPST(3),ldir(max_stn)
 
@@ -127,6 +126,7 @@ C 000815 nrv Remove all but VLBA option.
 ! 2008Aug19 JMGipson. Check to see if tape motion type is "AUTO" for vlba"
 ! 2015Mar30 JMG. got rid of obsolete arg in drchmod
 ! 2020Nov10 JMG. Got rid of somestuff dealing with headstacks. 
+! 2021Jan07  JMG removed unused variables 
 
       kintr = .false.
       if (kbatch) then

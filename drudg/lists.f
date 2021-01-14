@@ -52,7 +52,6 @@ C LOCAL:
       character*1 cs
       integer ipasp,iftold,idirp,idir,ituse
       integer i,j,id
-      integer ld
       real wlon,alat,al11,al12,al21,al22,rt1,rt2
       real az,el,x30,y30,x85,y85,dc,ha1
       real speed
@@ -65,7 +64,7 @@ C LOCAL:
       real tslew,dum
       integer iyr,idayr,ihr,imin,isc,mjd,mon,ida,ical,icod
       integer mjdpre,ispre,iyr2,idayr2,ihr2,imin2,isc2
-      integer*2 lfreq,lcbpre,lcbnew
+      integer*2 lfreq
       character*2 cwrap_pre
       character*2 cwrap_new
       double precision UT,GST,utpre ! previous value required for slewing
@@ -149,6 +148,7 @@ C 991209 nrv Add ITUSE to iftold calculation.
 ! 2007Jul20 JMG.  Added character LD
 ! 2013Sep19  JMGipson made sample rate station dependent
 ! 2014Apr23  JMG.  Changed lcbpre, lcbnow to cwrap_pre, cwrap_now. Updated call to slewo.f
+! 2021Jan07  JMG removed unused variables 
 C
 C 1. First initialize counters.  Read the first observation,
 C unpack the record, and set the PREvious variables to the

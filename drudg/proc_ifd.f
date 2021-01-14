@@ -28,12 +28,13 @@
       include 'drcom.ftni'
 
 !History
-! 2007Jul09. Split off from procs.
-! 2012Sep05 JMG.  Changes to support DBBC.
-!                 fvc,fvc_lo, fvc_hi put in bbc_freq.ftni
-! 2012Sep19  Checking of valid IFs made case independnent.
-! 2013Jul11 JMG. Added "if_targets"
-! 2016Jan19 JMG. Modified to handle DBBC_PFB which can have several DBBs with same number.
+! 2020-12-30 JMG Support for DBBC3
+! 2016-01-19 JMG Modified to handle DBBC_PFB which can have several DBBs with same number.
+! 2013-07-11 JMG Added "if_targets"
+! 2012-09-12 JMG Checking of valid IFs made case independnent.
+! 2012-09-05 JMG Changes to support DBBC.
+!                fvc,fvc_lo, fvc_hi put in bbc_freq.ftni
+! 2007-07-09 JMG Split off from procs.
 
 ! passed
       character*12 cname_ifd   !name of procedure.
@@ -61,6 +62,7 @@ C               lo=same as Mk3
 C    for K4-1:  patch=lo1,1-4,5-8,etc.
 C    for LBA:   lo=same as Mk3 ( but allow up to 4 IFs)
 !    for DBBC   ifX=input,agc,filter#,target  where X=A,B,C,D and input=1,2,3,4, target=1-65535
+!    for DBBC3  ifX=input,agc,, target 
 !
 
 C Later: add a check of patching to determine how the IF3 switches should really be set.
@@ -68,11 +70,11 @@ C         if (VC3  is LOW) switch 1 = 1, else 2
 C         if (VC11 is LOW) switch 2 = 1, else 2
 
 ! local
-      integer ifd(4)            !ifd(j)<>0 indicates we have IF
-      integer ibd(4)            !ib(j)<>   is one of the BBCs the IF connects to.
+      integer ifd(8)            !ifd(j)<>0 indicates we have IF
+      integer ibd(8)            !ib(j)<>   is one of the BBCs the IF connects to.
                                 !This is used because we can find the filter from the BBC#.
 
-      character*4 lvalid_if     !Valid IF characters
+      character*8 lvalid_if     !Valid IF characters
       integer ivc3_patch        !VC3,VC10 patch hi or lo?
       integer ivc10_patch
       integer itemp
@@ -81,6 +83,7 @@ C         if (VC11 is LOW) switch 2 = 1, else 2
       integer ic                !channel index
       integer iv                !channel#
       integer ilo               !LO index
+      logical kfound_if         !true if we have  a valid IF 
       integer j                 !loop index
       integer nch               !character counter
       character*2  cif          !Holds IF name.
@@ -93,7 +96,7 @@ C         if (VC11 is LOW) switch 2 = 1, else 2
       call proc_write_define(lu_outfile,luscn,cname_ifd)
 
 ! Initialize IFDs to not used.
-      do j=1,4
+      do j=1,8
        ifd(j)=0
        ibd(j) =0
       end do
@@ -102,12 +105,15 @@ C         if (VC11 is LOW) switch 2 = 1, else 2
          kdone_bbc(ib)=.false.
       enddo
 
-      if(kbbc .or. kdbbc_rack) then
+      if(cstrack_cap(istn) .eq. "DBBC3_DDC") then
+        lvalid_if="ABCDEFGH"
+      else if (kbbc .or. kdbbc_rack) then
         lvalid_if="ABCD"
       else
         lvalid_if="1234"
       endif
 !
+      kfound_if = .false.
       do ichan=1,nchan(istn,icode) ! which IFs are in use
         ic=invcx(ichan,istn,icode) ! channel number
         ib=ibbcx(ic,istn,icode) ! BBC number
@@ -127,6 +133,7 @@ C         if (VC11 is LOW) switch 2 = 1, else 2
           call capitalize(ch1)
           j=index(lvalid_if,ch1)
           if(j .ge. 1) then
+            kfound_if = .true. 
             if(ifd(j) .eq. 0) ifd(j)=ic
             if(ibbc_present(ib,istn,icode) .gt. 0) ibd(j)=ib
           endif
@@ -134,14 +141,39 @@ C         if (VC11 is LOW) switch 2 = 1, else 2
 
         kdone_bbc(ib)=.true.
       enddo ! which IFs are in use
-      if(ifd(1)+ifd(2)+ifd(3)+ifd(4) .eq. 0) then
+    
+      if(.not. kfound_if) then
         write(*,*)
         write(*,*) "ERROR (proc_ifd):  No valid LO inputs in schedule!"
+        return 
       endif
 
 !      write(*,*) "IFD: ", ifd(1:4)
-      if(kdbbc_rack) then
-        do j=1,4      !upto 4 IFs
+      if(cstrack_cap(istn) .eq. "DBBC3_DDC") then 
+! Same as kdbbc_rack  except upto 8 IFs 
+        do j=1,max_dbbc3_ifd    !upto 4 IFs
+          iv=ifd(j)
+          if(ifd(j) .ne. 0) then
+            cif=cifinp(iv,istn,icode)
+            write(cbuf,'("if",a1,"=",a1,",agc,")')
+     >          cif(1:1), cif(2:2) 
+           if(idbbc_if_targets(j) .gt. 0) then
+              write(cbuf(15:20),'(i5)') idbbc_if_targets(j)
+            endif
+            call drudg_write(lu_outfile,cbuf)    
+          endif
+        end do 
+
+        write(lu_outfile,'(a)') 'lo='
+        do ilo=1,max_dbbc3_ifd
+          iv=ifd(ilo)
+          if(iv .ne. 0) then
+!            write(*,*) "ilo ", ilo, " iv ", iv
+            call proc_lo(iv,icode,lvalid_if(ilo:ilo))
+           endif ! this LO in use
+        end do
+      else if(kdbbc_rack) then
+        do j=1,max_dbbc_ifd      !upto 4 IFs
           iv=ifd(j)
           if(ifd(j) .ne. 0) then
             cif=cifinp(iv,istn,icode)
@@ -150,22 +182,20 @@ C         if (VC11 is LOW) switch 2 = 1, else 2
            if(idbbc_if_targets(j) .ge. 0) then
               write(cbuf(15:20),'(",",i5)') idbbc_if_targets(j)
             endif
-            call squeezeleft(cbuf,nch)
-            call lowercase_and_write(lu_outfile,cbuf)
+            call drudg_write(lu_outfile,cbuf)    
           endif
         end do
         write(lu_outfile,'(a)') 'lo='
-        do ilo=1,4
+        do ilo=1,max_dbbc_ifd
           iv=ifd(ilo)
           if(iv .ne. 0) then
 !            write(*,*) "ilo ", ilo, " iv ", iv
             call proc_lo(iv,icode,lvalid_if(ilo:ilo))
            endif ! this LO in use
         end do
-!        writE(*,*) "freq: ", (freqlo(j,istn,1), j=1,16)
-      endif
+!        writE(*,*) "freq: ", (freqlo(j,istn,1), j=1,16)      
 
-      if(kmracks) then ! mk3/4/5 IFD
+      else if(kmracks) then ! mk3/4/5 IFD
         cbuf="ifd=,"
         nch=6
         do j=1,2

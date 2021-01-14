@@ -36,7 +36,9 @@
 
 ! History.
 ! Now put in changes in reverse order.
-! 2020Feb20 JMG. Change ASTRO-->VLBA if not DBBC or
+! 2020-12-30 JMG. Get lmode_cmd  from subroutine=proc_get_mode_vdif
+! 2020-02-20 JMG. Change ASTRO-->VLBA if not DBBC or
+!
 ! 2019Sep23 JMG. If the recorder is 'none' do not round up number of recorded channels to a power of 2.
 ! 2018Nov13 JMG. Removed check of bandwidth. This will now be caught by FS.
 ! 2018Sep14 JMG. Check wastro before geo2.
@@ -255,16 +257,9 @@
       kdebug=.false.
       kastro3_mode=.false.
 
-      lext_vdif="ext"
-      if(km5brec(1)) then
-         lmode_cmd="mk5b_mode"
-      else if(km5Crec(1)) then
-         lmode_cmd="mk5c_mode"
-         if(kfila10g_rack) lext_vdif="vdif"
-      else
-         lmode_cmd="bit_streams"
-      endif
-
+      call proc_get_mode_vdif(cstrec(istn,1),kfila10g_rack,
+     &     lmode_cmd, lext_vdif)
+ 
 ! If we don't have a VSI4 formatter or a DBBC write out comments.
       kcomment_only=.false.
       if(.not.(km5rack .or. kv5rack .or. kdbbc_rack .or.

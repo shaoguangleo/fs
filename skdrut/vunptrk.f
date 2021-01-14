@@ -32,6 +32,12 @@ C
       include '../skdrincl/skparm.ftni'
 C
 C  History:
+! Updates newest most recent
+! 2021-01-05 JMG replaced variable 'in' with icnt. 'IN' is fortran 90 keyword. 
+! 2021-01-05  JMG Changed limit from max_pass to max_track 
+! 2019-09-03 JMG. 1) Added implicit none.  Truncate track-frame format to 8 characters
+! 2016-01-19 JMG.  Doubled dimension of several variables that had max_track to 2*max_track becuase now sign& magnitude can be on same track 
+
 C 960520 nrv New.
 C 961122 nrv Change fget_mode_lowl to fget_all_lowl
 C 970124 nrv Move initialization to start.
@@ -39,8 +45,8 @@ C 970206 nrv Change max_pass to max_track as size of arrays in fandefs
 C 020327 nrv Get data_modulation.
 C 021111 jfq Don't allow track 0 or headstack 0
 ! 2004Dec8. Changed lm from holerrith to ASCII
-! 2016Jan19 JMG.  Doubled dimension of several variables that had max_track to 2*max_track becuase now sign& magnitude can be on same track 
-! 2019Sep03 JMG. 1) Added implicit none.  Truncate track-frame format to 8 characters
+
+
 !
 C
 C  INPUT:
@@ -68,18 +74,18 @@ C                    <0 indicates invalid value for a field
 C
 C  LOCAL:
       character*128 cout
-      integer it(4),j,nn,in,i,nch
+      integer it(4),j,nn,icnt,i,nch
       integer fvex_len,fvex_int,fvex_field,fget_all_lowl,ptr_ch
       integer is
 C
 C  Initialize
 C
-      do in=1,max_track
-        cp(in)=' '
-        cchref(in)=''
-        csm(in)=' '
-        itrk(in)=0
-        ihdn(in)=0
+      do icnt=1,max_track
+        cp(icnt)=' '
+        cchref(icnt)=''
+        csm(icnt)=' '
+        itrk(icnt)=0
+        ihdn(icnt)=0
       enddo
       nfandefs=0
       ifanfac=0
@@ -132,9 +138,10 @@ C
       iret = fget_all_lowl(ptr_ch(stdef),ptr_ch(modef),
      .ptr_ch('fanout_def'//char(0)),
      .ptr_ch('TRACKS'//char(0)),ivexnum)
-      in=0
-      do while (in.lt.max_pass.and.iret.eq.0) ! get all fanout defs
-        in=in+1 ! number of fanout defs
+      icnt=0
+      do while (icnt.lt.max_track.and.iret.eq.0) ! get all fanout defs
+!      do while (icnt.lt.max_pass.and.iret.eq.0) ! get all fanout defs
+        icnt=icnt+1 ! number of fanout defs
 C  2.1 Subpass
         ierr = 21
         iret = fvex_field(1,ptr_ch(cout),len(cout)) ! get subpass
@@ -142,13 +149,13 @@ C  2.1 Subpass
         NCH = fvex_len(cout)
         if (nch.ne.1) then
           if(km5rec) then
-             cp(in)='A'
+             cp(icnt)='A'
           else
             ierr = -2
             write(lu,'("VUNPTRK02 - Subpass must be 1 character.")')
           endif
         else
-          cp(in) = cout(1:1)
+          cp(icnt) = cout(1:1)
         endif
 C
 C  2.2 Chan ref
@@ -161,7 +168,7 @@ C  2.2 Chan ref
           write(lu,'("VUNPTRK03 - Channel ref name too long")')
           ierr=-3
         else
-          cchref(in) = cout(1:nch)
+          cchref(icnt) = cout(1:nch)
         ENDIF   
 
 C  2.3 Sign/magnitude
@@ -174,7 +181,7 @@ C  2.3 Sign/magnitude
           ierr = -4
           write(lu,'("VUNPTRK04 - Invalid sign/magnitude field.")')
         else
-          csm(in) = cout(1:1)
+          csm(icnt) = cout(1:1)
         endif
 
 C  2.4 Headstack number
@@ -188,7 +195,7 @@ C  2.4 Headstack number
           write(lu,'("VUNPTRK05 - Invalid headstack number, must be",
      .    "between 1 and ",i3)') max_headstack
         else
-          ihdn(in) = i
+          ihdn(icnt) = i
         endif
 
 C  2.5 Track list
@@ -208,7 +215,7 @@ C  2.5 Track list
      .        "must be between 1 and ",i3)') j,max_track
             else
               it(i-4)=j
-              if (i.eq.5) itrk(in)=j ! save the first one only
+              if (i.eq.5) itrk(icnt)=j ! save the first one only
             endif
           endif ! a track
           i=i+1
@@ -222,7 +229,7 @@ C       Check for consistent fanout
         do j=1,4
           if (it(j).ne.-99) nn=nn+1 ! count the fanned tracks
         enddo
-        if (in.eq.1) then 
+        if (icnt.eq.1) then 
           ifanfac=nn ! save first fanout value
         else ! check subsequent ones
           if (nn.ne.ifanfac) then
@@ -236,7 +243,7 @@ C       Get next fanout def statement
      .  ptr_ch('fanout_def'//char(0)),
      .  ptr_ch('TRACKS'//char(0)),0)
       enddo ! get all fanout defs
-      nfandefs = in
+      nfandefs = icnt
 
       if (ierr.gt.0) ierr=0
       return

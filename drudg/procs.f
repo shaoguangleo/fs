@@ -28,10 +28,12 @@ C Version 9.0 is supported with this routine.
       include '../skdrincl/statn.ftni'
       include '../skdrincl/skobs.ftni'
       include '../skdrincl/data_xfer.ftni'
-C
-C History Now with most recent at top. 
-! 2020Jun30  Got rid of test on kmissing (which checked if missing tape info)
-! 2019Aug25  Merged in changes from VGOS version. Mostly reading PROCS section from schedule file
+
+! History Now with most recent at top. 
+! 2021-01-05 JMG Replaced max_frq by max_code. (Max_frq was confusing and led to coding errors.)
+! 2020-12-31 JMG Got rid of 2-recorder stuff for K4 recordders (no more two recorders)
+! 2020-06-30 JMG Got rid of test on kmissing (which checked if missing tape info)
+! 2019-08-25 JMG Merged in changes from VGOS version. Mostly reading PROCS section from schedule file
 !
 !  
 C 930714  nrv  created,copied from procs
@@ -306,22 +308,16 @@ C Calls: TRKALL,IADDTR,IADDPC,IADDK4,SET_TYPE,PROCINTR
 C LOCAL VARIABLES:
       integer IC,ierr,i,j
       integer icode
-      integer ir
+
       integer nprocs
       logical kpcal_d,kpcal
       integer itemp 
       integer itpicd_period_use
       character*80  ldum 
- 
-
-C     real speed,spd
-C     integer*2 lspd(4)
-C     integer nspd     
-      character*12 cname_vc
-      character*12 cname_ifd     
-       
-      logical kk4vcab
     
+      character*12 cname_vc
+      character*12 cname_ifd            
+        
       character*2 codtmp
       character*4 cpmode                !mode for procedure names          
      
@@ -329,7 +325,7 @@ C     integer nspd
 
       logical ktrkf                     !write out trf procedure?
       character*1 lwhich8               ! which8 BBCs used: F=first, L=last
-      character*2 cifinp_save(max_chan,max_frq)
+      character*2 cifinp_save(max_chan,max_code)
   
 C INITIALIZED VARIABLES:      
 
@@ -343,18 +339,7 @@ C INITIALIZED VARIABLES:
       endif
 
       call init_hardware_common(istn)
-
-      ir = 1
-      if (kuse(2).and..not.kuse(1)) ir = 2
-
-      kk4vcab=.false.
-      if ((kk41rack.or.kk42rack).and..not.km4fmk4rack) then
-        if (nrecst(istn).eq.2) then
-          if (kk41rec(1).and.kk41rec(2)) kk4vcab=.true.
-          if (kk42rec(1).and.kk42rec(2)) kk4vcab=.true.
-        endif
-      endif
-
+    
       itpicd_period_use = itpid_period
       if (tpid_prompt.eq."YES") then ! get TPID period
 50      continue       
@@ -434,7 +419,7 @@ C    for procedure names.
 
 ! Note. Do not do track for VLBA5 or Mark5.  
       DO ICODE=1,NCODES !loop on codes
-      if (nchan(istn,icode).gt.0) then ! this mode defined
+        if (nchan(istn,icode).gt.0) then ! this mode defined
         nprocs=0
         codtmp=ccode(icode)
         call lowercase(codtmp)
@@ -449,10 +434,10 @@ C    for procedure names.
           end do
         endif ! check for on/off
 
-
-! Here we write out the setup procedure.     
-        call proc_setup(icode,codtmp,ktrkf,kpcal,kpcal_d,kk4vcab,
+ ! Here we write out the setup procedure.     
+        call proc_setup(icode,codtmp,ktrkf,kpcal,kpcal_d,
      >   itpicd_period_use, cname_ifd,cname_vc,lwhich8,cpmode,ierr)
+
         if(ierr .ne. 0) goto 9100 
    
 !********  END SETUP PROCEDURE **************************************************************
@@ -470,30 +455,35 @@ C For K4 VCs the content of this procedure will vary depending
 C on the type of recorder, so two procedures may be necessary
 C if the two recorders are different.
 C For most cases only one copy of this proc should be made.
-
+    
       if(kbbc .or. kifp .or. kvc.or. kdbbc_rack) then
          do i=1,max_chan
-           do j=1,max_frq
+           do j=1,max_code
             cifinp_save(i,j)=  cifinp(i,istn,j)
            enddo 
          end do      
-         call proc_vc_cmd(cname_vc,icode, kk4vcab, lwhich8,ierr)
+!         if(cname_vc .ne. " ") then 
+           call proc_vc_cmd(cname_vc,icode, lwhich8,ierr)
+!         endif 
          if(ierr .ne. 0) then
            do i=1,max_chan
-            do j=1,max_frq
+            do j=1,max_code
              cifinp(i,istn,j)= cifinp_save(i,j)  
             enddo 
            end do     
 !           goto 9100 
          endif 
-
          call proc_ifd(cname_ifd,icode,kpcal)
          do i=1,max_chan
-           do j=1,max_frq
+           do j=1,max_code
             cifinp(i,istn,j)= cifinp_save(i,j)  
            enddo 
-         end do           
+         end do         
       endif
+
+      if(cstrack_cap(istn) .eq. "DBBC3_DDC") then 
+         call proc_core3h(lu_outfile,luscn,istn,icode) 
+      endif 
 
 !      goto 9000
 C
@@ -525,8 +515,6 @@ C same logic can be used for TRKF and RECP.
 C Therefore, use index 1 for all the tests in this section.
 
       if (kpcal_d) then 
-!      if (kvrec(ir).or.kv4rec(ir).or.km3rec(ir).or.km4rec(ir)
-!     >   .or.Km5Disk) then
         if ((km4rack.or.kvracks.or.kv5rack).and.
      .      (.not.kpiggy_km3mode.or.klsblo
      .      .or.((km3be.or.km3ac).and.k8bbc))) then
