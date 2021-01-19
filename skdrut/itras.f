@@ -136,6 +136,7 @@
       integer ihd,itrack,ibit
 ! Set all of 'itrack_map' to -99=not recorded. 
       kdebug_itras=.false. 
+!      kdebug_itras=.true. 
 !      write(*,*) "kdebug ",kdebug_itras      
 
       do ihd=1,max_headstack
@@ -148,7 +149,7 @@
       if(kdebug_itras) then 
 !          open(11,file="itras.dbg") 
           write(*,'(a)') 
-     &      "   Trk Magic    SB   Bit   Chan   Pass" 
+     &      "   Trk Magic    SB   Bit   Chan   Pass Head" 
       endif 
       itrack_map_key=0
 
@@ -165,19 +166,24 @@
       include 'itras_cmn.ftni'
 ! Add a new track to itrack_map.
       integer itrack,isb,ibit,ihead,ichan,ipas
-
       integer*4 itras_magic 
+      character*4 csign_mag(2)
+
+      data csign_mag/"SIGN","MAG"/
+
       if(itrack_map(ibit,ihead,itrack) .ne. -99) then
-        write(*,*) 
-     >   "ITRAS(add_Track):  Track is already used in this mode!"
+        write(*,*) "ITRAS(add_track):  Duplicate channel assignment!"
+        write(*,*) "ITRAS(add_Track):  Channel", itrack, 
+     >         " has already been assigned ", csign_mag(ibit)
+        write(*,*) "Check your fanout_def"
          stop
       endif  
 
       itrack_map(ibit,ihead,itrack)=itras_magic(isb,ibit,ichan,ipas)
 
       if(kdebug_itras) then 
-         write(*,'(6i6)') itrack, itrack_map(ibit,ihead,itrack),
-     &   isb,ibit,ichan,ipas
+         write(*,'(7i6)') itrack, itrack_map(ibit,ihead,itrack),
+     &   isb,ibit,ichan,ipas,ihead
       endif 
 
       num_tracks_new = num_tracks_new+1      

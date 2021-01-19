@@ -17,7 +17,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
-      subroutine proc_core3h(lu_out,luscn,istn,icode)
+      subroutine proc_core3h(cproc_core8h,icode)
       implicit none
 ! Generate the core3h procs...
 ! A large part of this is generating the bitmasks
@@ -25,11 +25,13 @@
       include 'hardware.ftni'
       include '../skdrincl/freqs.ftni'
       include '../skdrincl/statn.ftni'
+      include 'drcom.ftni'
 
 ! functions
       integer itras
 ! passed
-      integer lu_out,luscn,istn,icode
+      character*(*) cproc_core8h
+      integer icode
 ! function
 !      integer iwhere_in_string_list
 
@@ -68,8 +70,7 @@
       integer iset 
       character*1 lul(2)            !ASCII "U","L"
       character*1 lsm(2)            !ASCII "S","M"
-      character*80 cbuf 
-
+     
       data lul/"U","L"/
       data lsm/"S","M"/
       kdebug=.false. 
@@ -158,9 +159,9 @@
         endif 
       end do 
 ! Now output command the procedure
-      call proc_write_define(lu_out, luscn,"core3h")
+      call proc_write_define(lu_outfile, luscn,cproc_core8h)
 
-      write(lu_out,'(a)') "core3h_mode0=begin,$"
+      write(lu_outfile,'(a)') "core3h_mode0=begin,$"
       do iboard =1,8
 !        write(*,*) "BRD ",iboard, imask(iboard,1), imask(iboard,2)
         if(imask(iboard,1) .ne. 0 .or. imask(iboard,2) .ne. 0) then 
@@ -169,11 +170,11 @@
      &     iboard, imask(iboard,2), imask(iboard,1), 
      &     samprate(istn,icode)
 !         write(*,*) idec, samprate(istn,icode) 
-         call drudg_write(lu_out,cbuf) 
+         call drudg_write(lu_outfile,cbuf) 
         endif
       end do
-      write(lu_out,'(a)') "core3h_mode0=end,$"
-      write(lu_out,"(a)") 'enddef'
+      write(lu_outfile,'(a)') "core3h_mode0=end,$"
+      write(lu_outfile,"(a)") 'enddef'
 
       return
       end 

@@ -18,7 +18,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
       subroutine proc_setup(icode,codtmp,ktrkf,kpcal,kpcal_d,
-     >   itpicd_period_use,cname_ifd,cname_vc,lwhich8,cpmode,ierr)
+     &   itpicd_period_use,cproc_ifd,cproc_vc,cproc_core3h,cpmode,
+     &   lwhich8,ierr)
 ! include
       implicit none  
       include 'hardware.ftni'
@@ -34,10 +35,12 @@
 
 ! returned
       integer itpicd_period_use
-      character*12 cname_vc
-      character*12 cname_ifd
-      character*1 lwhich8               ! which8 BBCs used: F=first, L=last
+      character*10 cproc_vc             !procedure name for VC/BBC
+      character*10 cproc_ifd            !procedure name for IFD
+      character*10 cproc_core3h         !procedure name for core3h 
       character*4 cpmode
+      character*1 lwhich8               ! which8 BBCs used: F=first, L=last
+  
       integer ierr
 ! functions
       integer iwhere_in_string_list
@@ -186,13 +189,12 @@ C  TPICD=STOP
 C  PCALD=STOP
          if (kpcal_d)  write(lu_outfile,'(a)') 'pcald=stop'
 
-
 C  TRKFffmp
 C  Also write trkf for Mk3 modes if it's an 8 BBC station or LSB LO
 c..2hd..if piggy make sure mk3 modes are written
         if(ktrkf .and. .not. klrack) then !For LBA, write trkf latter
           cnamep="trkf"//codtmp
-          write(lufile,'(a)') cnamep
+          write(lu_outfile,'(a)') cnamep
         endif
 C  PCALFff
         if (kpcal_d.and.(km4rack.or.kvrack.or.kv4rec(irec))) then
@@ -200,6 +202,11 @@ C  PCALFff
         endif
       endif
     
+      if(cstrack_cap(istn) .eq. "DBBC3_DDC") then
+       cproc_core3h="core3h"//codtmp
+       write(lu_outfile,'(a)') "core3h"//codtmp//"=$"
+      endif
+
       if (kvrec(irec)  .or.kv4rec(irec) .or.
      >    km4rec(irec) .or.Km5disk .or. knorec(irec)) then
         call proc_tracks(icode,num_tracks_rec_mk5)
@@ -244,7 +251,7 @@ C  For 8-BBC stations, use "M" for Mk3 modes
       endif ! kvracks or km3rac.or.km4rack but not S2 or K4
 
 C  BBCffb, IFPffb  or VCffb
-      cname_vc=" "    !initialze to no VC command
+      cproc_vc=" "    !initialze to no VC command
       ctemp=" " 
       if (kbbc) then
         ctemp="bbc"
@@ -259,14 +266,14 @@ C  BBCffb, IFPffb  or VCffb
       endif
       if(ctemp .ne. " ") then      
         nch=trimlen(ctemp)
-        cname_vc=ctemp(1:nch)//codtmp//cband_char(vcband(1,istn,icode))
-        write(lu_outfile,'(a)') cname_vc
+        cproc_vc=ctemp(1:nch)//codtmp//cband_char(vcband(1,istn,icode))
+        write(lu_outfile,'(a)') cproc_vc
       endif
 
       if (kbbc .or. kifp .or. kvc.or.
      &   cstrack_cap(istn)(1:4) .eq. "DBBC") then
-         cname_ifd="ifd"//codtmp
-         writE(lu_outfile,'(a)') cname_ifd
+         cproc_ifd="ifd"//codtmp
+         writE(lu_outfile,'(a)') cproc_ifd
        endif ! kbbc kvc kfid
 
        if(cstrack_cap(istn)(1:8) .eq. "DBBC_DDC" .or.

@@ -1,6 +1,6 @@
 C  Common Block statement for DRUDG
 ! Newer changes now at top
-! 2020-12-30  JMG Added in setup_prompt 
+! 2020-12-30  JMG Added in setup_proc
 ! 2020-06-30  JMG Got rid of kmissing (see if pass information is absent)
 ! 2019-08-25  JMG Added imark6_off to support broadband
 ! 2019-08-21  JMG Got rid of iperm which whas not used
@@ -87,14 +87,14 @@ c
       character*6 cpid
       character*4 cepoch
 
-      character*4 lsetup_prompt,tpid_prompt,lvsi_align_prompt
+      character*4 lsetup_proc,tpid_prompt,lvsi_align_prompt
       character*4 cont_cal_prompt,cont_cal_Polarity   
      
       COMMON/DRCOM_CH/cbuf, LSKDFI,SNPNAME,CINNAME,COUTNAME,
      >    lstname,tmpname,pntname,ctmpnam,prcname,cprtlan,cprtpor,
      >    cprttyp,cprport,cprtlab,clabtyp,labname,ctextname,
      >    cpaper_size,coption,cpid,cepoch,
-     >    lsetup_prompt,tpid_prompt,lvsi_align_prompt,
+     >    lsetup_proc,tpid_prompt,lvsi_align_prompt,
      >    cont_cal_prompt,cont_cal_Polarity
 
       double precision RA50(max_cel),DEC50(max_cel)

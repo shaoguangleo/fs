@@ -17,7 +17,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
-      subroutine proc_vc_cmd(cname_vc, icode, lwhich8,ierr)     
+      subroutine proc_vc_cmd(cproc_vc, icode, lwhich8,ierr)     
 ! Write out VC commands.
       implicit none 
       include 'hardware.ftni'
@@ -27,9 +27,9 @@
       include 'bbc_freq.ftni'
 
 ! Passed parameters.
-      character*12 cname_vc     !Name of procedure             !
-      integer icode             !what code
-      character*1 lwhich8       ! which8 BBCs used: F=first, L=last
+      character*(*) cproc_vc      !Name of procedure             !
+      integer icode               !what code
+      character*1 lwhich8         ! which8 BBCs used: F=first, L=last
 ! Returned
       integer ierr           !<>0 is some error. 
 
@@ -42,7 +42,7 @@
 ! 2020-01-05 JMG Got rid of some obsolete confusing code dealing with 2-recorders
 ! 2020-12-31 JMG Got rid of KK4VCAB
 ! 2020-12-30 JMG Added in call pt proc_dbbc_bbc
-! 2016-01-18 JMG Only write out name if cname_vc <> " "   
+! 2016-01-18 JMG Only write out name if cproc_vc <> " "   
 ! 2010-05-11 JMG Changed DRF and DRLO to double precision. In computing rfvc was losing precision.
 ! 2008-02-26 JMG  Write out comment if unused BBCs are present.
 ! 2007-07-09 JMG Split off from procs.
@@ -64,8 +64,8 @@
             
       kwrite_return = .true.   
       
-      if(cname_vc .ne. " ") then 
-        call proc_write_define(lu_outfile,luscn,cname_vc)
+      if(cproc_vc .ne. " ") then 
+        call proc_write_define(lu_outfile,luscn,cproc_vc)
       endif 
 
 C     Initialize the bbc array to "not written yet"
@@ -185,7 +185,7 @@ C         For K4, use bandwidth of channel 1
               write(lu_outfile,'(a)') cbuf(1:nch)
             end do
           endif 
-      if(cname_vc .ne. " ") then 
+      if(cproc_vc .ne. " ") then 
         write(lu_outfile,"(a)") 'enddef'
       endif 
   

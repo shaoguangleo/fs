@@ -26,8 +26,9 @@ C
 ! This just handles handles drudg.
 
 ! Updates....
-! 2020-01-11 JMG Modified to account for DBBC3
-! 2020-12-30 JMG New option in skedf.ctl:  always_setup. [YES|NO|ASK] default is YES
+! 2021-01-14 JMG Increased max_token 
+! 2021-01-11 JMG Modified to account for DBBC3
+! 2020-12-30 JMG New option in skedf.ctl:  SETUP_PROC. [YES|NO|ASK] default is NO
 ! 2018-06-17 JMG Father's day. Make sure always a space " " between sections of snap file.
 !                Also fix reported error in label size.  Was reporting error when there was not one. 
 ! 2018-09-25 JMG skedf.ctl has different locations depending on wheater PC-FS computer or not. This is set in makefile. 
@@ -69,7 +70,7 @@ C  LOCAL VARIABLES
 
       integer MaxToken
       integer NumToken
-      parameter(MaxToken=6)
+      parameter(MaxToken=20)
       character*128 ltoken(MaxToken)
       equivalence (lkeyword,ltoken(1))
       equivalence (lvalue,ltoken(2))    
@@ -135,7 +136,7 @@ C  LOCAL VARIABLES
       cont_cal_prompt="off" 
       cont_cal_polarity=" "    !default is none!
       lvsi_align_prompt= " "   !default is none!
-      lsetup_prompt="YES" 
+      lsetup_proc="NO" 
       ktarget_time=.false.
       klo_config=.false. 
       kignore_mark5b_bad_mask=.false.
@@ -188,7 +189,6 @@ C  2. Process the control file if it exists. Loop throug 3 times.
 
         write(luscn,'("drudg_rdctl: Reading system control file ",A)')
      >       cskedf(j)(1:itmplen)   
-
     
 ! File exists, and we have opened it.    
         call readline_skdrut(lu,cbuf,keof,ierr,1) !read first $           
@@ -339,7 +339,7 @@ C  $MISC
                    cepoch=lvalue(1:4)
                 else
                   write(luscn,'("RDCTL06 ERROR: Invalid epoch ",a)')
-     >             lvalue(1:trimlen(lvalue))
+     >             ">"//lvalue(1:trimlen(lvalue))//"<"
                endif
 ! Disk2file stuff
               else if (lkeyword .eq. 'DISK2FILE_DIR') then
@@ -412,16 +412,16 @@ C         EQUIPMENT
                 end do
               else if(lkeyword .eq. 'EQUIPMENT_OVERRIDE') then
                 kequip_over=.true.
-              else if(lkeyword .eq. "ALWAYS_SETUP") then
+              else if(lkeyword .eq. "USE_SETUP_PROC") then
                 call capitalize(lvalue)
                 if(lvalue .eq. "Y" .or. lvalue .eq. "YES") then
-                  lsetup_prompt="YES"
+                  lsetup_proc="YES"
                 else if(lvalue .eq. "N" .or. lvalue .eq. "NO") then
-                  lsetup_prompt="NO"
+                  lsetup_proc="NO"
                 else if(lvalue .eq. "ASK") then
-                  lsetup_prompt="ASK"
+                  lsetup_proc="ASK"
                 else
-                  write(luscn, *) "RDCTL Error: Invalid always_setup " 
+                  write(luscn, *) "RDCTL Error: Invalid USE_SETUP_PROC " 
      &                 //lvalue(1:10) 
                 endif 
 
@@ -523,7 +523,7 @@ C         TPICD
                       write(*,*) "Setting to 0."
                      idbbc_if_targets(i)=0
                    endif 
-                  end do                                        
+                  end do                                    
                 endif 
               else if(lkeyword .eq. "DBBC_BBC_TARGET") then 
                 if(NumToken .ne. 2) then

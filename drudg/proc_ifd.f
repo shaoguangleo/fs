@@ -17,7 +17,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
-      subroutine proc_ifd(cname_ifd,icode,kpcal)
+      subroutine proc_ifd(cproc_ifd,icode,kpcal)
 ! write out IFD and LO procedures
       implicit none  !2020Jun15 JMGipson automatically inserted.
       include 'hardware.ftni'
@@ -37,7 +37,7 @@
 ! 2007-07-09 JMG Split off from procs.
 
 ! passed
-      character*12 cname_ifd   !name of procedure.
+      character*(*) cproc_ifd   !name of procedure.
       integer icode     ! Code
       logical kpcal     ! do pcal
 
@@ -93,7 +93,7 @@ C         if (VC11 is LOW) switch 2 = 1, else 2
       logical kdone_bbc(max_bbc)
 
       tol=0.00001
-      call proc_write_define(lu_outfile,luscn,cname_ifd)
+      call proc_write_define(lu_outfile,luscn,cproc_ifd)
 
 ! Initialize IFDs to not used.
       do j=1,8
@@ -152,11 +152,11 @@ C         if (VC11 is LOW) switch 2 = 1, else 2
       if(cstrack_cap(istn) .eq. "DBBC3_DDC") then 
 ! Same as kdbbc_rack  except upto 8 IFs 
         do j=1,max_dbbc3_ifd    !upto 4 IFs
-          iv=ifd(j)
+          iv=ifd(j) 
           if(ifd(j) .ne. 0) then
             cif=cifinp(iv,istn,icode)
             write(cbuf,'("if",a1,"=",a1,",agc,")')
-     >          cif(1:1), cif(2:2) 
+     >          cif(1:1), cif(2:2)            
            if(idbbc_if_targets(j) .gt. 0) then
               write(cbuf(15:20),'(i5)') idbbc_if_targets(j)
             endif

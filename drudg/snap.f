@@ -546,32 +546,27 @@ C 2004Jul13 JMGipson. Fixed bug in scan names.
       ierr=1
 
 
-! New option.  lsetup_prompt 
-      if(lsetup_prompt .eq. "ASK") then
+! New option.  lsetup_proc 
+      if(lsetup_proc .eq. "ASK") then
          lresponse="?"
-         do while(.not.(lsetup_prompt .eq. "YES" 
-     &             .or. lsetup_prompt .eq. "NO")) 
-           write(*,*) "Always Setup (Yes/No): "
-           write(*,*) "  Yes = every scan"
-           write(*,*) "  No  = first scan and when mode changes"
-           write(*,'("   ? ",$)')  
+         do while(.not.(lsetup_proc .eq. "YES" 
+     &             .or. lsetup_proc .eq. "NO")) 
+           write(*,'("Use setup_proc (Yes/No): ",$)') 
            read(*,*) lresponse
            call capitalize(lresponse) 
            if(lresponse .eq."YES" .or. lresponse .eq. "Y") then
-              lsetup_prompt="YES"
+              lsetup_proc="YES"
            else if(lresponse .eq. "NO" .or. lresponse .eq. "N") then 
-              lsetup_prompt="NO"
+              lsetup_proc="NO"
            else
               write(*,*) "Invalid response. Try again. " 
            endif 
          end do    
       endif      
-      if(lsetup_prompt .eq. "YES") then
-         write(*,*) 
-     >  "Will issue SETUP for every scan (except phase reference)"
+      if(lsetup_proc .eq. "YES") then
+         write(*,*) "Will use setup_proc"
       else
-         write(*,*) 
-     >  "Will issue SETUP only on first scan, and if mode changes" 
+         write(*,*) "Will use normal setup" 
       endif 
          
       irec=1
@@ -1048,14 +1043,12 @@ C               SOURCE=name,ra,dec,epoch
 ! 1. First observation.
 ! 2. Change in code.
 ! 3. If sked flag is set.
-! 4. If lsetup_prompt="YES"
+! 4. If lsetup_proc="YES"
 
       if(kPhaseRefPrev.or.krunning) then
         continue    !Don't issue in these 
       else IF (iobs_this_stat.EQ.0 
-     &   .OR. Icod           .ne. icod_prev 
-     &   .or. kflg(1)
-     &   .or. lsetup_prompt .eq. "YES") then     
+     &   .OR. Icod  .ne. icod_prev .or. kflg(1)) then 
         if(kin2net) then
           call snap_in2net_connect(lufile,
      >           ldest,lxfer_options(ixfer_ptr))
@@ -1070,14 +1063,19 @@ C               SOURCE=name,ra,dec,epoch
         else
            call setup_name(ccode(icod),csetup_name)
         endif 
-        call drudg_write(lufile,csetup_name)                                 
+        if(lsetup_proc .eq. "YES" .and. .not. 
+     >    (icod .ne. icod_prev .or. iobs_this_stat .eq. 0)) then
+            write(lufile,'(a)') "setup_proc="//csetup_name
+        else
+            write(lufile,'(a)') csetup_name
+        endif                            
         if(km6disk) then
            nch=trimlen(scan_name(iskrec(iobs_now)))
            write(ldum,'("mk6=record=",
      >       i4.4,"y",i3.3,"d",i2.2,"h", i2.2,"m",i2.2,"s",":",
      >       i6,":",i6,":",a,":",a,":",a,";")')
      >       (itime_scan_beg(i),i=1,5),
-     >       idur(istnsk), idata_mk6_scan_mb/(1024*8) ,       
+     >       idur(istnsk), idata_mk6_scan_mb/(1000*8) ,       
      >       scan_name(iskrec(iobs_now))(1:nch),
      >       lsession(1:trimlen(lsession)),
      >       cpocod(istn)                             

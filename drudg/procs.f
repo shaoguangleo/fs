@@ -315,11 +315,14 @@ C LOCAL VARIABLES:
       integer itpicd_period_use
       character*80  ldum 
     
-      character*12 cname_vc
-      character*12 cname_ifd            
-        
+      character*10 cproc_vc             !procedure name for VC/BBC
+      character*10 cproc_ifd            !procedure name for IFD
+      character*10 cproc_core3h         !procedure name for core3h 
+      character*4 cpmode    
+      character*4 cpmode                !mode for procedure names       
+ 
       character*2 codtmp
-      character*4 cpmode                !mode for procedure names          
+        
      
       logical kin2net_on                !Is in2net on?
 
@@ -436,7 +439,9 @@ C    for procedure names.
 
  ! Here we write out the setup procedure.     
         call proc_setup(icode,codtmp,ktrkf,kpcal,kpcal_d,
-     >   itpicd_period_use, cname_ifd,cname_vc,lwhich8,cpmode,ierr)
+     &   itpicd_period_use,cproc_ifd,cproc_vc,cproc_core3h,cpmode,
+     &   lwhich8,ierr)
+  
 
         if(ierr .ne. 0) goto 9100 
    
@@ -462,8 +467,8 @@ C For most cases only one copy of this proc should be made.
             cifinp_save(i,j)=  cifinp(i,istn,j)
            enddo 
          end do      
-!         if(cname_vc .ne. " ") then 
-           call proc_vc_cmd(cname_vc,icode, lwhich8,ierr)
+!         if(cproc_vc .ne. " ") then 
+           call proc_vc_cmd(cproc_vc,icode, lwhich8,ierr)
 !         endif 
          if(ierr .ne. 0) then
            do i=1,max_chan
@@ -473,7 +478,7 @@ C For most cases only one copy of this proc should be made.
            end do     
 !           goto 9100 
          endif 
-         call proc_ifd(cname_ifd,icode,kpcal)
+         call proc_ifd(cproc_ifd,icode,kpcal)
          do i=1,max_chan
            do j=1,max_code
             cifinp(i,istn,j)= cifinp_save(i,j)  
@@ -482,7 +487,7 @@ C For most cases only one copy of this proc should be made.
       endif
 
       if(cstrack_cap(istn) .eq. "DBBC3_DDC") then 
-         call proc_core3h(lu_outfile,luscn,istn,icode) 
+         call proc_core3h(cproc_core3h,icode) 
       endif 
 
 !      goto 9000

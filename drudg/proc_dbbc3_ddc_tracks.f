@@ -44,9 +44,6 @@
 
       character*20 lmode_cmd
       character*6 lext_vdif   
-
-! May need to do a bunch of these depending on how many BBCs....
-      write(lu_file,'(a)') "core3h  $"
       
       call proc_get_mode_vdif(cstrec(istn,1),kfila10g_rack,
      &     lmode_cmd, lext_vdif)
