@@ -34,31 +34,20 @@
 ! Now most recent at the top.
 ! 2021-01-12 JMG First version. Based loosely on proc_disk_tracks 
 !
-
 ! local
- 
+
       integer*4 imask(2)  !Mask can be 64 bits long.
       integer*4 imask_lo, imask_hi
       equivalence(imask(1),imask_hi)
       equivalence(imask(2),imask_lo)
 
-      character*20 lmode_cmd
-      character*6 lext_vdif   
-      
-      call proc_get_mode_vdif(cstrec(istn,1),kfila10g_rack,
-     &     lmode_cmd, lext_vdif)
-      
+            
 ! Initialize mask to NULL. 
        imask(1)=0
        imask(2)=0         
 
        call proc_track_mask_lines(lu_file, imask_hi,imask_lo,
-     >   kfila10g_rack,samprate(istat,icode), lmode_cmd,lext_vdif)
-
-      if(lmode_cmd .ne. "bit_streams") then
-        write(lu_outfile,'(a)') "jive5ab_cnfg"
-      endif
-
+     >   kfila10g_rack,samprate(istat,icode)) 
 
       end
 

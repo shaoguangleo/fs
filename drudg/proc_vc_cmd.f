@@ -102,9 +102,9 @@ C             For 8-BBC stations use the loop index number to get 1-7
             call proc_vracks_bbc(icode,ic,ib,ichan)
           else if(kmracks .or. kk41rack.or.kk42rack) then 
             call proc_mracks_vc(icode,ic,ib,ichan) 
-          else if(cstrack_cap(istn) .eq. "DBBC3_DDC") then
+          else if(cstrack_cap .eq. "DBBC3_DDC") then
             call proc_dbbc3_bbc(icode,ic,ib,ichan)
-          else if(cstrack_cap(istn)(1:4) .eq. "DBBC") then 
+          else if(cstrack_cap(1:4) .eq. "DBBC") then 
             call proc_dbbc_bbc(icode,ic,ib,ichan) 
           endif 
 

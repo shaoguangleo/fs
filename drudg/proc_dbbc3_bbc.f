@@ -35,10 +35,15 @@
                                                !NOTE: Does not use ichan at all.
 !functions
       integer iwhere_in_string_list
-
+     
 ! local
       character*1 lq
-
+      character*12 lbbc_freq
+      character*12 lbandwidth 
+      integer nch,nch2 
+      integer ierr 
+      integer ind 
+   
       integer iwhere
       integer max_if_valid
       parameter (max_if_valid=2*max_ifd)
@@ -64,13 +69,21 @@
       iwhere= iwhere_in_string_list(cif_valid,max_if_valid,cif)
       if(iwhere .eq. 0) then
         call write_return_if_needed(luscn,kwrite_return)
-        write(luscn,'(a,i3,a,a,a)')
+        write(luscn,'(a,i3,a,a,a,$)')
      >   "proc_dbbc3_bbc: Warning! For BBC ",ib, " IF '", cif,
      >         "' is not valid! "
-        write(luscn,'(a)') 
-     &    "               Valid options are a1,b1...h1, a2,b2,..h2" 
-        endif      
+        write(luscn,'(a)') "Valid options are a1,b1...h1, a2,b2,..h2" 
+        ind=index("abcdefgh",cif(1:1))
+        if(ind .ne. 0 .and. ldbbc_if_inputs(ind) .ne. " ") then
+           cifinp(ic,istn,icode)(1:2)=cif(1:1)//ldbbc_if_inputs(ind)
+           write(*,*) "         Used DBBC_IF_INPUTS to create: ", 
+     &        cifinp(ic,istn,icode)
+        endif 
+      endif    
+ 
 
+! DBBC3 does not use filters. 
+      ibbc_filter(ib)=-99
       rfmin=0.000001
       rfmax=4096  
       if(fvc(ib) .lt. rfmin .or. fvc(ib) .gt. rfmax) then  
@@ -82,15 +95,23 @@
         write(luscn,'(a)') "   Check LO and IF in schedule. "   
       endif
 
-!     write(*,*) fvc(ib), ibbc_filter(ib)
+      call double_2_string(fvc(ib),'(f11.6)',lbbc_freq,nch,ierr) 
+      call real_2_string(vcband(ic,istn,icode),'(f11.6)', 
+     > lbandwidth,nch2,ierr) 
+ 
+50    continue      
+     
+
 ! Make a string that looks like:
 ! bbc011=612.0000001,a,8.000
-      write(cbuf,'("bbc",i3.3,"=",f11.6,",",a1,",", f8.2)')
-     >    ib,fvc(ib),cifinp(ic,istn,icode), vcband(ic,istn,icode)
+      write(cbuf,'("bbc",i3.3,"=",a,",",a1,",",a)')   
+     >  ib,lbbc_freq(1:nch),cifinp(ic,istn,icode), lbandwidth(1:nch2) 
       call drudg_write(lu_outfile,cbuf)       !get rid of spaces, and write it out. 
      
       return
       end
+
+
 
 
 

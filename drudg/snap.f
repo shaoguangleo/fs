@@ -260,6 +260,8 @@ C     data cvpass /'abcdefghijklmnopqrstuvwxyzAB'/
 C
 C History:
 ! Now put in most recent first. 
+! 2021-01-20 JMG if lsetup_proc="YES" always use setup_proc. 
+! 2021-01-20 JMG setup=SETUPBB if cstrack(istn)="BB" 
 ! 2020-12-30 JMG Removed variables which were not used.  Removed obsolete check procedure.
 !                Added in new code for setup. 
 ! 2020-11-20 JMG If no observations return with warning. 
@@ -1058,13 +1060,12 @@ C               SOURCE=name,ra,dec,epoch
           call snap_disk2file_abort(lufile)
           kdisk2file_prev=.false.
         endif  
-        if(km6disk) then
+        if(cstrack(istn) .eq. "BB") then
            csetup_name="setupbb"
         else
            call setup_name(ccode(icod),csetup_name)
         endif 
-        if(lsetup_proc .eq. "YES" .and. .not. 
-     >    (icod .ne. icod_prev .or. iobs_this_stat .eq. 0)) then
+        if(lsetup_proc .eq. "YES") then
             write(lufile,'(a)') "setup_proc="//csetup_name
         else
             write(lufile,'(a)') csetup_name

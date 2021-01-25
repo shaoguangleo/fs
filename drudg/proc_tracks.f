@@ -53,20 +53,19 @@
       izero=0
     
 ! output for DBBC_PFB rack.
-      if(cstrack_cap(istn)(1:8) .eq. "DBBC_PFB") then
+      if(cstrack_cap(1:8) .eq. "DBBC_PFB") then
         call proc_dbbc_pfb_tracks(lu_outfile,istn,icode)
         return
       endif
 ! output for DBBC3
-      if(cstrack_cap(istn) .eq. "DBBC3_DDC") then
+      if(cstrack_cap .eq. "DBBC3_DDC") then
         call proc_dbbc3_ddc_tracks(lu_outfile,istn,icode)
         return
       endif
 
 ! Output Mark5B  recorder stuff.
       if(km5rack.or.kv5rack.or.kdbbc_rack.or.km5b.or. knorack) then
-        call proc_disk_tracks(lu_outfile,istn,icode,
-     >                  kignore_mark5b_bad_mask)
+        call proc_disk_tracks(icode)
         return
       endif
 

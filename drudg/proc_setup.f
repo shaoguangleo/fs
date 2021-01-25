@@ -18,8 +18,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
       subroutine proc_setup(icode,codtmp,ktrkf,kpcal,kpcal_d,
-     &   itpicd_period_use,cproc_ifd,cproc_vc,cproc_core3h,cpmode,
-     &   lwhich8,ierr)
+     &  itpicd_period_use,cproc_ifd,cproc_vc,cproc_core3h,cproc_thread,
+     &  cpmode,lwhich8,ierr)
 ! include
       implicit none  
       include 'hardware.ftni'
@@ -38,6 +38,7 @@
       character*10 cproc_vc             !procedure name for VC/BBC
       character*10 cproc_ifd            !procedure name for IFD
       character*10 cproc_core3h         !procedure name for core3h 
+      character*10 cproc_thread         !procedure name for thread 
       character*4 cpmode
       character*1 lwhich8               ! which8 BBCs used: F=first, L=last
   
@@ -124,8 +125,8 @@
       endif
 
 ! Initialize cont_cal_out
-      if(cstrack_cap(istn)(1:8) .eq. "DBBC_DDC" .or.
-     &   cstrack_cap(istn) .eq. "DBBC3_DDC") then
+      if(cstrack_cap(1:8) .eq. "DBBC_DDC" .or.
+     &   cstrack_cap .eq. "DBBC3_DDC") then
         cont_cal_out=cont_cal_prompt
         call lowercase(cont_cal_out)
         do while(.not. (cont_cal_out .eq. "on".or.
@@ -202,14 +203,28 @@ C  PCALFff
         endif
       endif
     
-      if(cstrack_cap(istn) .eq. "DBBC3_DDC") then
+      if(cstrack_cap .eq. "DBBC3_DDC") then
        cproc_core3h="core3h"//codtmp
        write(lu_outfile,'(a)') "core3h"//codtmp//"=$"
       endif
-
+   
       if (kvrec(irec)  .or.kv4rec(irec) .or.
      >    km4rec(irec) .or.Km5disk .or. knorec(irec)) then
+        lmode_cmd=" " 
+        call proc_get_mode_vdif(cstrec(istn,1),kfila10g_rack)
+  
         call proc_tracks(icode,num_tracks_rec_mk5)
+
+        if(cstrec_cap.eq."FLEXBUFF" .or. cstrec_cap.eq."MARK5C") then 
+          cproc_thread="thread"//codtmp
+          write(lu_outfile,'(a)') cproc_thread
+        endif        
+
+        if(cstrack_cap .eq. "DBBC3_DDC") then 
+          if(lmode_cmd .ne. "bit_streams") then
+            write(lu_outfile,'(a)') "jive5ab_cnfg"
+          endif
+        endif 
       endif
   
 C REC_MODE=<mode> for K4
@@ -259,9 +274,9 @@ C  BBCffb, IFPffb  or VCffb
         ctemp="ifp"
       elseif (kvc) then
         ctemp="vc"
-      else if(cstrack_cap(istn)(1:8) .eq. "DBBC_DDC") then 
+      else if(cstrack_cap(1:8) .eq. "DBBC_DDC") then 
        ctemp="dbbc"
-      else if(cstrack_cap(istn) .eq. "DBBC3_DDC") then
+      else if(cstrack_cap .eq. "DBBC3_DDC") then
        ctemp="dbbc"
       endif
       if(ctemp .ne. " ") then      
@@ -271,13 +286,13 @@ C  BBCffb, IFPffb  or VCffb
       endif
 
       if (kbbc .or. kifp .or. kvc.or.
-     &   cstrack_cap(istn)(1:4) .eq. "DBBC") then
+     &   cstrack_cap(1:4) .eq. "DBBC") then
          cproc_ifd="ifd"//codtmp
          writE(lu_outfile,'(a)') cproc_ifd
        endif ! kbbc kvc kfid
 
-       if(cstrack_cap(istn)(1:8) .eq. "DBBC_DDC" .or.
-     &    cstrack_cap(istn)      .eq. "DBBC3_DDC") then 
+       if(cstrack_cap(1:8) .eq. "DBBC_DDC" .or.
+     &    cstrack_cap      .eq. "DBBC3_DDC") then 
           if(kcont_cal) then
              write(lu_outfile,'("cont_cal=on,",a)') cont_cal_polarity
           else

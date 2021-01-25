@@ -124,7 +124,7 @@
 
 ! Make a string that looks like:
 ! bbc01=612.99,a,8.000
-      if(cstrack_cap(istn)(1:8) .eq. "DBBC_DDC") then
+      if(cstrack_cap(1:8) .eq. "DBBC_DDC") then
         write(cbuf,'("bbc",i2.2,"=",f7.2,",",a1,",", f6.2)')
      >    ib,fvc(ib),cifinp(ic,istn,icode), vcband(ic,istn,icode)
         call drudg_write(lu_outfile,cbuf)       !get rid of spaces, and write it out.  

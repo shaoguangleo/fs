@@ -91,6 +91,7 @@ C         if (VC11 is LOW) switch 2 = 1, else 2
       real*8  rlo_dif31         !LO freq3-lo freq1 (if both definied)
       real*8  tol               !tolerance: How close to zero do we need to be.
       logical kdone_bbc(max_bbc)
+      integer max_ifd_use       
 
       tol=0.00001
       call proc_write_define(lu_outfile,luscn,cproc_ifd)
@@ -105,7 +106,7 @@ C         if (VC11 is LOW) switch 2 = 1, else 2
          kdone_bbc(ib)=.false.
       enddo
 
-      if(cstrack_cap(istn) .eq. "DBBC3_DDC") then
+      if(cstrack_cap .eq. "DBBC3_DDC") then
         lvalid_if="ABCDEFGH"
       else if (kbbc .or. kdbbc_rack) then
         lvalid_if="ABCD"
@@ -126,7 +127,7 @@ C         if (VC11 is LOW) switch 2 = 1, else 2
 ! Note: For PFB can have several BBCs with the same number...
         if(freqrf(ic,istn,icode) .gt. 0 .and.
      &    (.not.kdone_bbc(ib) .or.
-     &      cstrack_cap(istn)(1:8) .eq."DBBC_PFB")) then
+     &      cstrack_cap(1:8) .eq."DBBC_PFB")) then
 
           ch1=cifinp(ic,istn,icode)(1:1)
 
@@ -148,45 +149,31 @@ C         if (VC11 is LOW) switch 2 = 1, else 2
         return 
       endif
 
-!      write(*,*) "IFD: ", ifd(1:4)
-      if(cstrack_cap(istn) .eq. "DBBC3_DDC") then 
-! Same as kdbbc_rack  except upto 8 IFs 
-        do j=1,max_dbbc3_ifd    !upto 4 IFs
-          iv=ifd(j) 
-          if(ifd(j) .ne. 0) then
-            cif=cifinp(iv,istn,icode)
-            write(cbuf,'("if",a1,"=",a1,",agc,")')
-     >          cif(1:1), cif(2:2)            
-           if(idbbc_if_targets(j) .gt. 0) then
-              write(cbuf(15:20),'(i5)') idbbc_if_targets(j)
-            endif
-            call drudg_write(lu_outfile,cbuf)    
-          endif
-        end do 
-
-        write(lu_outfile,'(a)') 'lo='
-        do ilo=1,max_dbbc3_ifd
-          iv=ifd(ilo)
-          if(iv .ne. 0) then
-!            write(*,*) "ilo ", ilo, " iv ", iv
-            call proc_lo(iv,icode,lvalid_if(ilo:ilo))
-           endif ! this LO in use
-        end do
-      else if(kdbbc_rack) then
-        do j=1,max_dbbc_ifd      !upto 4 IFs
+      if(kdbbc_rack .or. cstrack_cap .eq. "DBBC3_DDC") then
+        if(cstrack_cap .eq. "DBBC3_DDC") then
+           max_ifd_use=max_dbbc3_ifd
+        else
+           max_ifd_use=max_dbbc_ifd
+        endif      
+        do j=1,max_ifd_use      !upto 4 IFs
           iv=ifd(j)
           if(ifd(j) .ne. 0) then
             cif=cifinp(iv,istn,icode)
-            write(cbuf,'("if",a1,"=",a1,",agc,",i1)')
-     >          cif(1:1), cif(2:2), ibbc_filter(ibd(j))
-           if(idbbc_if_targets(j) .ge. 0) then
+            if(ibbc_filter(ibd(j)) .ge. 0) then 
+              write(cbuf,'("if",a1,"=",a1,",agc,",i1)')
+     >          cif(1:1), cif(2:2), ibbc_filter(ibd(j)) 
+            else
+              write(cbuf,'("if",a1,"=",a1,",agc,")')
+     >          cif(1:1), cif(2:2), ibbc_filter(ibd(j)) 
+            endif 
+            if(idbbc_if_targets(j) .ge. 0) then
               write(cbuf(15:20),'(",",i5)') idbbc_if_targets(j)
             endif
             call drudg_write(lu_outfile,cbuf)    
           endif
         end do
         write(lu_outfile,'(a)') 'lo='
-        do ilo=1,max_dbbc_ifd
+        do ilo=1,max_ifd_use
           iv=ifd(ilo)
           if(iv .ne. 0) then
 !            write(*,*) "ilo ", ilo, " iv ", iv

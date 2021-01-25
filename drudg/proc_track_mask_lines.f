@@ -18,7 +18,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
       subroutine proc_track_mask_lines(lu_file, imask_hi,imask_lo,
-     >   kfila10g_rack, samprate, lmode_cmd,lext_vdif)
+     >   kfila10g_rack, samprate) 
 
 ! write out commands that look something like this:
 !>>    fila10g_mode=,0x55555555,,16.00
@@ -36,31 +36,35 @@
 !
 
        implicit none
+       include 'drcom.ftni'
 ! passed
        integer lu_file                !handle of file
        integer*4 imask_hi,imask_lo    !low and high order bits of mask
        logical kfila10g_rack          !fila10g_rack???
        real*4 samprate
-       character*20 lmode_cmd         !what kind of mode (=mk5c_mode, mk5b_mode, bit_stream...)
-       character*6 lext_vdif          !what kind of extension 
 ! local
-       character*100 cbuf             !string to output.          
-     
+       character*100 cbuf             !string to output.        
+       character*12 lsamprate
+       double precision dtemp 
+       integer nch, ierr
+
+      call real_2_string(samprate,'(f11.4)', lsamprate,nch,ierr)   
+
 
 !For fila10g, then have 64 bit masks. Else it is 32 bit. 
       if(kfila10g_rack) then
 !Both masks are NULL.  Don't write them out.  
         if(imask_lo .eq. 0 .and. imask_hi .eq. 0) then 
-          write(cbuf,'(a,"=,,,,",f9.3)')
-     >      'fila10g_mode', samprate   
+          write(cbuf,'(a,"=,,,,",a)')
+     >      'fila10g_mode', lsamprate   
 ! Don't write high order mask.  
         else if(imask_hi .eq. 0) then
-          write(cbuf,'(a,"=,0x",z8.8,",,",f9.3)')
-     >      'fila10g_mode', imask_lo,samprate                 
+          write(cbuf,'(a,"=,0x",z8.8,",,",a)')
+     >      'fila10g_mode', imask_lo,lsamprate                 
         else
 ! write both. 
-          write(cbuf,'(a,"=",2("0x",Z8.8,","),",",f9.3)')
-     >      'fila10g_mode', imask_hi,imask_lo,samprate                  
+          write(cbuf,'(a,"=",2("0x",Z8.8,","),",",a)')
+     >      'fila10g_mode', imask_hi,imask_lo,lsamprate                  
         endif
         call drudg_write(lu_file,cbuf)
         write(lu_file,'("fila10g_mode")') 
@@ -80,14 +84,14 @@
         endif
       else 
         if(imask_lo .eq. 0 .and. imask_hi .eq. 0) then 
-          write(cbuf,'(a,"=",a,",,,",f9.3)')
-     >      lmode_cmd,lext_vdif, samprate
+          write(cbuf,'(a,"=",a,",,,",a)')
+     >      lmode_cmd,lext_vdif, lsamprate
         else if(imask_hi .eq. 0) then 
-          write(cbuf,'(a,"=",a,",0x",Z8.8,",,",f9.3)')
-     >      lmode_cmd,lext_vdif, imask_lo,samprate
+          write(cbuf,'(a,"=",a,",0x",Z8.8,",,",a)')
+     >      lmode_cmd,lext_vdif, imask_lo,lsamprate
         else 
-          write(cbuf,'(a,"=",a,",0x",2Z8.8,",,",f9.3)')
-     >      lmode_cmd,lext_vdif, imask_hi,imask_lo,samprate
+          write(cbuf,'(a,"=",a,",0x",2Z8.8,",,",a)')
+     >      lmode_cmd,lext_vdif, imask_hi,imask_lo,lsamprate
         endif 
       endif 
 

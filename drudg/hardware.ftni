@@ -12,6 +12,10 @@
       integer idir                      !Tape direction.
       Common /hardware/luFile,iftold,MaxTapeLen,itime2stop,idir
 
+      character*20 cstrack_cap
+      character*8  cstrec_cap
+      common /hardware_ch/cstrack_cap,cstrec_cap
+
 ! Track tables.
       integer itrk(max_track,max_headstack)
       integer itrk2(max_track,max_headstack)

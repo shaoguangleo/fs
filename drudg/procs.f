@@ -318,6 +318,7 @@ C LOCAL VARIABLES:
       character*10 cproc_vc             !procedure name for VC/BBC
       character*10 cproc_ifd            !procedure name for IFD
       character*10 cproc_core3h         !procedure name for core3h 
+      character*10 cproc_thread         !procedure name for thread 
       character*4 cpmode    
       character*4 cpmode                !mode for procedure names       
  
@@ -363,7 +364,33 @@ C INITIALIZED VARIABLES:
           endif
         endif ! default/decode      
       endif ! get TPID period
-    
+
+! New option.  lvdif_thread
+      if(cstrec_cap .eq. "FLEXBUFF" .or. 
+     &   cstrec_cap .eq. "MARK5C") then 
+      if(lvdif_thread .eq. "ASK") then
+         lresponse="?"
+         do while(.not.(lsetup_proc .eq. "YES" 
+     &             .or. lsetup_proc .eq. "NO")) 
+           write(*,'("Vdif_single_thread_per_file (Yes/No): ",$)') 
+           read(*,*) lresponse
+           call capitalize(lresponse) 
+           if(lresponse .eq."YES" .or. lresponse .eq. "Y") then
+              lvdif_thread="YES"
+           else if(lresponse .eq. "NO" .or. lresponse .eq. "N") then 
+              lvdif_thread="NO"
+           else
+              write(*,*) "Invalid response. Try again. " 
+           endif 
+         end do    
+      endif      
+      if(lvdif_thread .eq. "YES") then
+         write(*,*) "Will use single threadper file"
+      else
+         write(*,*) "Will use multiply threads per file"
+      endif
+      endif  
+   
       
       WRITE(LUSCN,'( "Procedures for ",a)') cstnna(istn)
 C
@@ -419,6 +446,9 @@ C    Generate the procedure name, then write into proc file.
 C    Get the track assignments first, and the mode name to use
 C    for procedure names.
 
+!Initalize to no procedure. These will get set below.
+      cproc_thread=" "
+      cproc_cored3h=" "  
 
 ! Note. Do not do track for VLBA5 or Mark5.  
       DO ICODE=1,NCODES !loop on codes
@@ -439,8 +469,8 @@ C    for procedure names.
 
  ! Here we write out the setup procedure.     
         call proc_setup(icode,codtmp,ktrkf,kpcal,kpcal_d,
-     &   itpicd_period_use,cproc_ifd,cproc_vc,cproc_core3h,cpmode,
-     &   lwhich8,ierr)
+     &   itpicd_period_use,cproc_ifd,cproc_vc,cproc_core3h,cproc_thread,
+     &   cpmode, lwhich8,ierr)
   
 
         if(ierr .ne. 0) goto 9100 
@@ -486,9 +516,14 @@ C For most cases only one copy of this proc should be made.
          end do         
       endif
 
-      if(cstrack_cap(istn) .eq. "DBBC3_DDC") then 
+      if(cstrack_cap .eq. "DBBC3_DDC") then 
          call proc_core3h(cproc_core3h,icode) 
       endif 
+
+      if(cproc_thread .ne. " ") then 
+         call proc_vdif_thread(cproc_thread)
+      endif 
+
 
 !      goto 9000
 C

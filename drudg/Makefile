@@ -16,7 +16,7 @@ PROGRAM = drudg
 #
 # Set objects
 #
-OBJECTS=  \
+OBJECTS= double_2_string.o real_2_string.o  \
 b3of9.o bar1.o bbbuf.o bbsyn.o bcode.o blabl.o \
 cazel.o cband_char.o cbinf.o checkmk5xlat.o check_csb_list.o check_dbbc_setup.o chkgrpandwrite.o ckobs.o clist.o \
 copen.o copy_time.o counter_init.o crelease.o \

@@ -26,9 +26,11 @@ C
 ! This just handles handles drudg.
 
 ! Updates....
+! 2021-01-25 JMG New  optoin: vdif_single_thread_per_file   
 ! 2021-01-14 JMG Increased max_token 
 ! 2021-01-11 JMG Modified to account for DBBC3
 ! 2020-12-30 JMG New option in skedf.ctl:  SETUP_PROC. [YES|NO|ASK] default is NO
+!
 ! 2018-06-17 JMG Father's day. Make sure always a space " " between sections of snap file.
 !                Also fix reported error in label size.  Was reporting error when there was not one. 
 ! 2018-09-25 JMG skedf.ctl has different locations depending on wheater PC-FS computer or not. This is set in makefile. 
@@ -137,6 +139,7 @@ C  LOCAL VARIABLES
       cont_cal_polarity=" "    !default is none!
       lvsi_align_prompt= " "   !default is none!
       lsetup_proc="NO" 
+      lvdif_thread="NO"
       ktarget_time=.false.
       klo_config=.false. 
       kignore_mark5b_bad_mask=.false.
@@ -424,6 +427,19 @@ C         EQUIPMENT
                   write(luscn, *) "RDCTL Error: Invalid USE_SETUP_PROC " 
      &                 //lvalue(1:10) 
                 endif 
+              else if(lkeyword .eq. "VDIF_SINGLE_THREAD_PER_FILE") then
+                call capitalize(lvalue)
+                if(lvalue .eq. "Y" .or. lvalue .eq. "YES") then
+                  lvdif_thread="YES"
+                else if(lvalue .eq. "N" .or. lvalue .eq. "NO") then
+                  lvdif_thread="NO"
+                else if(lvalue .eq. "ASK") then
+                  lvdif_thread="ASK"
+                else
+                  write(luscn, *) 
+     &               "RDCTL Error: Invalid VDIF_SINGLE_THREAD_PER_FILE" 
+     &                 //lvalue(1:10) 
+                endif 
 
 C         TPICD
               elseif (lkeyword .eq. 'TPICD') then
@@ -564,7 +580,6 @@ C         TPICD
      >                         ltoken(2) .eq. "YES" .or.
      >                         ltoken(2) .eq."ON"
                 endif     
-
                          
               else if(lkeyword .eq. "TARGET_TIME") then 
                if(NumToken .ne. 2) then

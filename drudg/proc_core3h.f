@@ -49,12 +49,12 @@
 
 ! Our approach is simple.
 !  We start with one mask for each BBC and set the appropriate bitrs.
-!  Then we use this to set the bits in iboardmask.
+!  Then we use this to set the bits in ibrdmask.
       integer*4 imask(8,2) 
       integer   ibbc_mask(max_bbc)
       character*5 lsked_csb(max_chan)  !for debugging purposes. 
       integer*4 imask_temp
-      integer iboard                   !
+      integer ibrd                   !which board 
       integer ihalf
       integer ibbc_tmp
       integer num_shift  
@@ -70,15 +70,19 @@
       integer iset 
       character*1 lul(2)            !ASCII "U","L"
       character*1 lsm(2)            !ASCII "S","M"
+      character*12 lsamprate
+      double precision dtemp  
+      integer ierr
+      integer nch 
      
       data lul/"U","L"/
       data lsm/"S","M"/
       kdebug=.false. 
 !      kdebug=.true. 
 
-        do iboard=1,8
-        imask(iboard,1)=0
-        imask(iboard,2)=0
+        do ibrd=1,8
+        imask(ibrd,1)=0
+        imask(ibrd,2)=0
       end do 
       do ibbc=1,max_bbc
        ibbc_mask(ibbc)=0
@@ -142,19 +146,19 @@
             ihalf=2
             ibbc_tmp=ibbc_tmp-64
           endif
-          iboard=1
+          ibrd=1
          do while(ibbc_tmp .gt. 8)
            ibbc_tmp=ibbc_tmp-8
-           iboard=iboard+1
+           ibrd=ibrd+1
          end do 
     
-! Example.  IB=35.   Ihalf=1, Iboard=4, ibbc_tmp=3 
+! Example.  IB=35.   Ihalf=1, ibrd=4, ibbc_tmp=3 
           num_shift=(ibbc_tmp-1)*4 
 !          write(*,*) "Num_shift ", num_shift 
           imask_temp=ishft(ibbc_mask(ibbc),num_shift)  
-          imask(iboard,ihalf)=ior(imask(iboard,ihalf),imask_temp)
-!          write(*,'("BBC board half ",3i4)') ibbc, iboard, ihalf
-!          write(*,'("Mask ",2(1x,z32))')imask_temp, imask(iboard,ihalf) 
+          imask(ibrd,ihalf)=ior(imask(ibrd,ihalf),imask_temp)
+!          write(*,'("BBC board half ",3i4)') ibbc, ibrd, ihalf
+!          write(*,'("Mask ",2(1x,z32))')imask_temp, imask(ibrd,ihalf) 
 
         endif 
       end do 
@@ -162,14 +166,24 @@
       call proc_write_define(lu_outfile, luscn,cproc_core8h)
 
       write(lu_outfile,'(a)') "core3h_mode0=begin,$"
-      do iboard =1,8
-!        write(*,*) "BRD ",iboard, imask(iboard,1), imask(iboard,2)
-        if(imask(iboard,1) .ne. 0 .or. imask(iboard,2) .ne. 0) then 
-         write(cbuf,
-     &     '("core3h_mode",i1,"=",2("0x",z8.8,","),",",f6.2,",$")') 
-     &     iboard, imask(iboard,2), imask(iboard,1), 
-     &     samprate(istn,icode)
+
+      dtemp=samprate(istn,icode)
+      call double_2_string(dtemp,'(f11.4)', lsamprate,nch,ierr) 
+      do ibrd =1,8
+        if(imask(ibrd,1) .ne. 0 .or. imask(ibrd,2) .ne. 0) then 
+          if(imask(ibrd,2) .eq. 0) then 
+! Output null for imask(ibrd,2) in this case. 
+             write(cbuf,
+     &       '("core3h_mode",i1,"=,",1("0x",z8.8,","),",",a,",$")') 
+     &       ibrd, imask(ibrd,1),  lsamprate(1:nch)
+          else
+             write(cbuf,
+     &       '("core3h_mode",i1,"=",2("0x",z8.8,","),",",a,",$")') 
+     &       ibrd,imask(ibrd,2),imask(ibrd,1),lsamprate(1:nch) 
+          endif 
 !         write(*,*) idec, samprate(istn,icode) 
+
+
          call drudg_write(lu_outfile,cbuf) 
         endif
       end do

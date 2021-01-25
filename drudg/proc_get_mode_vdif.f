@@ -17,15 +17,16 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
-      subroutine proc_get_mode_vdif(cstrec,kfila10g,lmode_cmd,lext_vdif)
+      subroutine proc_get_mode_vdif(cstrec,kfila10g)
       implicit none 
+      include '../skdrincl/skparm.ftni'
+      include 'drcom.ftni'
       character*(*) cstrec
       logical kfila10g
-      character*(*) lmode_cmd   !recording mode 
-      character*(*) lext_vdif   !VDIF? 
-
+   
 ! History.
-! 2020-12-29. JMG First version. Used by proc_dbbc_pfb_tracks and proc_disk_tracks.
+! 2021-01-25  JMG now sets lext_vdif and lmode_mcd in drcom.ftni
+! 2020-12-29. JMG First version. Used by proc_dbbc_pfb_tracks and proc_disk_tracks, proc_dbbc3_ddc...
 
       lext_vdif="ext"
       if(cstrec .eq."Mark5B") then

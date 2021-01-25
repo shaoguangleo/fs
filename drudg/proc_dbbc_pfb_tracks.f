@@ -57,16 +57,11 @@
       equivalence(imask(2),imask_lo)
 
 !      character*80 cbuf
-      character*20 lmode_cmd
-      character*6 lext_vdif
-      character*4 lvsi_align   !holds vsi_align value=0,1,NONE,ASK
+       character*4 lvsi_align   !holds vsi_align value=0,1,NONE,ASK
 
 ! This holds strings of the form a02, b13, etc
       character*3  ltmp_array(32)
       integer      ikey(32)
-
-      call proc_get_mode_vdif(cstrec(istn,1),kfila10g_rack,
-     &     lmode_cmd, lext_vdif)
 !
 ! Make the bit-mask.
 ! Initialize mask.
@@ -85,7 +80,7 @@
        end do
 
       call proc_track_mask_lines(lu_file, imask_hi,imask_lo,
-     >   kfila10g_rack,samprate(istat,icode), lmode_cmd,lext_vdif)
+     >   kfila10g_rack,samprate(istat,icode))
 
 ! Now we have to write out the vsi1 and vsi2 commands. These look like...
 !>>   form=flex
