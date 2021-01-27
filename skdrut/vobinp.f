@@ -76,7 +76,7 @@ C  LOCAL:
       character*128 cmo,cstart,cout,cunit,cscan_id
       character*(max_sorlen) csor
       integer istart(5)
-      integer iii
+      integer i
       double precision d,start_sec
       integer idstart,idend
   
@@ -132,8 +132,8 @@ C 1. Get scans one by one.
       
         if (mod(nobs,100).eq.0) write(lu,'(i5,$)') nobs
 
-        do iii=1,5
-          istart(iii)=0
+        do i=1,5
+          istart(i)=0
         enddo
         iret = fvex_date(ptr_ch(cstart),istart,start_sec)
         ierr=8 ! date/time
@@ -187,7 +187,7 @@ C       Now get each station line that is part of this scan.
           endif
          
 !          write(*,*) "station #: ", " >"//cout(1:4)//"< ",istn 
-!          pause 
+!          pause    
           if (nchan(istn,icod).eq.0) then ! code not defined          
             write(lu,*) "VOBINP03 - Mode ",
      >      cmo(1:fvex_len(cmo))," not defined for station: ", 

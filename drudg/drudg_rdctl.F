@@ -66,7 +66,7 @@ C  LOCAL VARIABLES
       character*10 lsecname
       character*3 lprompt
       integer itemp
-      character*25 lkeyword     !keyword
+      character*40 lkeyword     !keyword
       character*128 lvalue      !value
       character*1 lchar 
 

@@ -33,7 +33,7 @@ proc_mk5_init1.o proc_mk5_init2.o proc_disk_tracks.o proc_norack.o \
 proc_patch.o proc_pcalf.o  proc_sked_proc.o proc_setup.o \
 proc_dbbc_pfb_tracks.o proc_dbbc3_ddc_tracks.o  proc_tracks.o proc_trkf.o \
 proc_vc_cmd.o proc_vracks_bbc.o proc_lba_ifp.o proc_mracks_vc.o proc_dbbc_bbc.o proc_dbbc3_bbc.o \
-proc_track_mask_lines.o \
+proc_thread.o proc_track_mask_lines.o \
 proc_write_define.o procintr.o procs.o \
 prtmp.o prtxt.o psbar.o read_snap1.o read_snap6.o \
 setprint.o setup_name.o setup_printer.o skdshft.o \

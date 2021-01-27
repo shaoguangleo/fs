@@ -323,6 +323,7 @@ C LOCAL VARIABLES:
       character*4 cpmode                !mode for procedure names       
  
       character*2 codtmp
+      character*4 lresponse 
         
      
       logical kin2net_on                !Is in2net on?
@@ -370,8 +371,8 @@ C INITIALIZED VARIABLES:
      &   cstrec_cap .eq. "MARK5C") then 
       if(lvdif_thread .eq. "ASK") then
          lresponse="?"
-         do while(.not.(lsetup_proc .eq. "YES" 
-     &             .or. lsetup_proc .eq. "NO")) 
+         do while(.not.(lvdif_thread .eq. "YES" 
+     &             .or. lvdif_thread .eq. "NO")) 
            write(*,'("Vdif_single_thread_per_file (Yes/No): ",$)') 
            read(*,*) lresponse
            call capitalize(lresponse) 
@@ -448,7 +449,7 @@ C    for procedure names.
 
 !Initalize to no procedure. These will get set below.
       cproc_thread=" "
-      cproc_cored3h=" "  
+      cproc_core3h=" "  
 
 ! Note. Do not do track for VLBA5 or Mark5.  
       DO ICODE=1,NCODES !loop on codes
@@ -516,12 +517,12 @@ C For most cases only one copy of this proc should be made.
          end do         
       endif
 
-      if(cstrack_cap .eq. "DBBC3_DDC") then 
+      if(cproc_core3h .ne. " ") then 
          call proc_core3h(cproc_core3h,icode) 
       endif 
 
       if(cproc_thread .ne. " ") then 
-         call proc_vdif_thread(cproc_thread)
+         call proc_thread(cproc_thread)
       endif 
 
 

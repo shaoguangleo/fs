@@ -1,0 +1,128 @@
+This is a summary of changes introduced in providing support for DBBC3.
+
+Deleted files:
+  drudg/snap_check.f                 Don't need to do tape check.
+  skdrut/unphd.f                     Don't need to read headstack info
+
+Changes required to support new rack DBBC3. 
+  skdrincl/valid_hardware.ftni      Increased number of RACKS. 
+  skdrut/valid_hardware_blk.f       Added in DBBC3. Rearranged order of racks. 
+
+Increased max_bbc, max_ifd. 
+In some places numbers were replaced parameters, e.g. 4-->max_ifd, 16-->max_bbc
+Files affected:
+   skdrincl/skparm.ftni
+   drudg/bbc_freq.ftni
+   drudg/drudg_rdctl.F
+   drudg/proc_ifd.f
+   drudg/proc_mracks.f
+
+New routines:
+  drudg/double_2_string.f            Return left justified string with trailing 0s omitted:'  16.0000' --> '16.0'
+  drudg/real_2_string.f              Ditto
+
+  drudg/proc_core3h.f                New procedure.
+  drudg/proc_dbbc3_bbc.f             Write out BBC for DBBC3
+  drudg/proc_dbbc3_ddc_tracks.f      'track' like commands. 
+  durdg/proc_thread.f                New procedure
+  drudg/proc_get_mode_vdif.f         Pulled similar code out of several routines and made a subroutine.
+ 
+Rewritten or substantially modified. 
+  skdrincl/skparm.ftni               Reorganized to group related items together.  
+  drudg/cband_char.f                 Rewritten to make logic clearer.
+  drudg/drudg_rdctl.F                Modified to parse new options is skedf.ctl.
+  drudg/procs.f                      Modified for DBBC.  Outuput new procedures 
+  drudg/proc_ifd.f                   Handle DBBC3
+  drudg/proc_setup.f                 Generate new function calls. Support for DBBC
+  drudg/proc_track_masklines.f       Modification for DBBC3
+  drudg/proc_tracks.f                Modification for DBBC3
+  drudg/proc_vc_cmd.f                Modification for DBBC. 
+  
+  skdrut/vunpif.f                    Modified to include new valid IFs for DBBC3
+
+
+Fixed sleeping bug:
+  drudg/proc_write_define.f          If name of procedure was passed like:  call proc_write_define(lufile,luscn, 'foobaz') 
+                                     then would cause drudg to crash under f77.
+Miscellaneous
+  drudg/equip_type.f                 Omit second recorder. 
+
+The following are changes of a more cosmetic nature, or introduced to reduce confusion.
+
+Moved files:  
+  skdrincl/iroll_def.ftni  --> skdrut/iroll_def.ftni.   
+  skdrut/iroll_def.f          Modified to point to new location. 
+
+Removed unused variables to minimize warning messages during compilation.
+  drudg/bbbuf.f
+  drudg/drcom.ftni     RA50 and DEC50 were removed. Replaced by sorp1950 in skdrincl/sorc.ftni
+  drudg/lists.f
+  drudg/point.f 
+  drudg/proc_dbbc_bbc.f 
+  drudg/snap.f
+  drudg/ttape.f 
+  drudg/unpsk.f 
+ 
+  skdrut/feetscan.f
+  skdrut/frinit.f 
+  skdrut/frinp.f       Has itras variable but never set or used.
+  skdrut/kbit.f
+  skdrut/kcont.f
+  skdrut/mjd2yrdoy.f  
+  skdrut/stinp.f 
+  skdrut/unpco.f       itras is in the argument list in call from unpco but is never set or used
+  skdrut/vmoinp.f 
+  skdrut/vunpdas.f 
+
+General:
+ Renaming of some variables to be less confusing. Each change affects several files. 
+  max_frq-->max_code
+  Files affected:  
+    skdrincl/skparm.ftni
+    skdrincl/freqs.ftni
+    skdrut/freq_init.f
+
+    drudg/procs.f
+    drudg/sread.f
+    drudg/vlbah.f
+    drudg/wrhead.f
+
+    skdrut/frinp.f
+    skdrut/iroll_def.f
+    skdrut/itras_cmn.ftni
+    skdrut/itras.f
+    skdrut/skdrini.f
+    skdrut/vmonip.f
+
+The variable sorp50 really contained the J2000 source coordinates. Modified this and the name of 
+some associated variables to make clearer what they were. 
+
+ sorp50 --> sorp2000
+ sorpda --> sorp_now
+ satp50 --> satpos
+ RA50,DEC50 -->sorp1950 
+ Files affected:
+   skdrincl/sourc.ftni
+   
+   drudg/fdrudg.f
+   drudg/lists.f
+   drudg/point.f
+   drudg/snap.f
+
+   skdrut/cvpos.f
+   skdrut/soinp.f
+   skdrut/sunarc.f
+   skdrut/vsoinp.f  
+  
+
+
+
+
+
+
+
+
+
+
+
+

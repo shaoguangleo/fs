@@ -22,9 +22,7 @@
 
 C     BBBUF creates buffers that hold the lines with bbsynth commands
 C     This routine is called only for switched sequences
-
-      include '../skdrincl/skparm.ftni'
-
+   
 C INPUT:
         integer icod    ! frequency code index
 	integer imode   ! group 1 or 2 of the switched frequencies
@@ -32,6 +30,7 @@ C INPUT:
 C                       with appropriate frequencies for the mode
 
 C COMMON
+      include '../skdrincl/skparm.ftni' 
       include '../skdrincl/freqs.ftni'
       include 'drcom.ftni'
 

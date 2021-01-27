@@ -326,6 +326,7 @@ C
       integer ibuf_len,ibufq_len,max_obs
       PARAMETER (IBUF_LEN = 499)   ! length in words
       PARAMETER (IBUFQ_LEN = 500)   ! length in words
+
 C
 C     The maximum number of scans allowed in a schedule
 C

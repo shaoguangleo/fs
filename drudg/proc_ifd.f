@@ -164,7 +164,7 @@ C         if (VC11 is LOW) switch 2 = 1, else 2
      >          cif(1:1), cif(2:2), ibbc_filter(ibd(j)) 
             else
               write(cbuf,'("if",a1,"=",a1,",agc,")')
-     >          cif(1:1), cif(2:2), ibbc_filter(ibd(j)) 
+     >          cif(1:1), cif(2:2)
             endif 
             if(idbbc_if_targets(j) .ge. 0) then
               write(cbuf(15:20),'(",",i5)') idbbc_if_targets(j)

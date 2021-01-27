@@ -42,10 +42,8 @@
        integer*4 imask_hi,imask_lo    !low and high order bits of mask
        logical kfila10g_rack          !fila10g_rack???
        real*4 samprate
-! local
-       character*100 cbuf             !string to output.        
+! local   
        character*12 lsamprate
-       double precision dtemp 
        integer nch, ierr
 
       call real_2_string(samprate,'(f11.4)', lsamprate,nch,ierr)   

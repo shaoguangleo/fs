@@ -52,7 +52,6 @@ C Input:
       character*(*) cr4
 C
 C LOCAL:
-      double precision R,D
       character*2 cstn
       integer TRIMLEN,pcode
       character*128 cdum
@@ -246,6 +245,7 @@ C 021002 nrv Write comments about geo/astro VEX/standard schedule.
 ! 2016May07 WEH.      Increased size of crack_type_def, crack_tmp_cap from Char*12-->char*20
 ! 2016Jul28 JMG.      Now also set cfirstrec_def in 'equipment override'
 ! 2018Jun17 JMG.      Removed debugging statement whichr wrote out first recorder
+! 2021-01-27 JMG      Renamed: SORP50-->sorp2000  RA50, DEC50-->SORP1950
 ! Get the version
       include 'fdrudg_date.ftni'
       call get_version(iverMajor_FS,iverMinor_FS,iverPatch_FS,crel_FS)
@@ -552,9 +552,8 @@ C
 C
 C  Now change J2000 coordinates to 1950 and save for later use
         DO I=1,NCELES
-          CALL PREFR(SORP50(1,I),SORP50(2,I),2000,R,D)
-          RA50(I) = R
-          DEC50(I) = D
+          CALL PREFR(SORP2000(1,I),SORP2000(2,I),2000,
+     &               SORP1950(1,I),SORP1950(2,i))  
         END DO
         DO I=1,NSATEL !MOVE NAMES
           INEXT=NCELES+I

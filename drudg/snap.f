@@ -657,8 +657,8 @@ C
 C  Precess the sources to today's date for slewing calculations.
       TJD = JULDA(MON,IDA,itime_scan_beg(1)-1900) + 2440000.0D0
       DO I=1,NCELES
-        call apstar_Rad(tjd,sorp50(1,i),sorp50(2,i),
-     >         sorpda(1,i),sorpda(2,i))
+        call apstar_Rad(tjd,sorp2000(1,i),sorp2000(2,i),
+     >         sorp_now(1,i),sorp_now(2,i))
       enddo
 
       call snapintr(1,itime_scan_beg(1))
@@ -937,12 +937,12 @@ C               SOURCE=name,ra,dec,epoch
         IF (ISOR.LE.NCELES) THEN !celestial source
 ! do some intermediate processing.
           IF (cepoch.EQ.'1950') THEN
-            SORRA = RA50(ISOR)
-            SORDEC = DEC50(ISOR)
+            SORRA =  sorp1950(1,ISOR)
+            SORDEC = sorp1950(2,ISOR)
             EPOC = 1950.0
           ELSE !2000
-            SORRA = SORP50(1,ISOR)
-            SORDEC = SORP50(2,ISOR)
+            SORRA =  sorp2000(1,ISOR)
+            SORDEC = sorp2000(2,ISOR)
             EPOC = 2000.0
           endif
           CALL RADED(SORRA, SORDEC,0.0d0,IRAH,IRAM,RAS,

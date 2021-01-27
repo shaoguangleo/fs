@@ -125,8 +125,7 @@ C   Insert blanks for other stations' footages
       nch = nch + nstatn*8 ! (1)pass(1)dur(5)footage(1)space
 C  Procedure flags
       nch=nch+1
-! Set all to "N
-      nch = ichmv_ch(ibuf,nch,'NNNN')
+      nch = ichmv_ch(ibuf,nch,'YNNN')
 C  Duration
       nch=nch+1
       nch = durscan(ibuf,nch,idend)
