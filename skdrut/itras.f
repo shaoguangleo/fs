@@ -78,7 +78,7 @@
 !*************************************************************************
       integer function itras(isb,ibit,ihead,ichn,ipass,istn,icode)      
       include 'itras_cmn.ftni'
-! Return the trackt used for recording for isb,ibit,ihead,ichn,ipass,istn,icode.
+! Return the track used for recording for isb,ibit,ihead,ichn,ipass,istn,icode.
 ! If no track, return -99. 
      
 ! passed variables.
@@ -95,15 +95,21 @@
 ! local
       integer*4 imagic    !magic number. Unique number for (isb,ibit,ichn,ipass)
       integer imap
+      
 ! Return track that this is written on, or -99 if no track.
-
 ! Check to see if this mode has been defined for this station.
+      if(num_track_map .eq. 0) then
+        write(*,*) "ITRAS: No valid modes defined for any station" 
+        write(*,*) "Check fan_def and chan_def statements mapping "
+        stop
+      endif 
       imap=istn_code_key(istn,icode)
       if(imap .eq. 0) then
-         if(num_track_map .ne. 0) then
-!           write(*,*) "ITRAS: Mode # ",icode,
-!     >       " not defined for station # ",istn
-          endif
+          itras=-99 
+!         if(num_track_map .ne. 0) then
+           write(*,*) "ITRAS: Mode # ",icode,
+     >       " not defined for station # ",istn
+!          endif
          return
       endif
 
@@ -116,7 +122,6 @@
       end do
       itras=-99 
 100   continue  
-  
      
       return
       end

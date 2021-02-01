@@ -25,6 +25,7 @@ C     Call once to get all values in freqs.ftni filled in, then call
 C     SETBA to figure out which frequency bands are there.
 C
 !Updates
+! 2021-01-31 JMG Removed call to vunproll since don't use barrel roll anymore
 ! 2021-01-05 JMG Replaced max_frq by max_code. (Max_frq was confusing and led to coding errors.)
 ! 2020-12-30 JMG Removed unused variables
 ! 2020-10-03 JMG Removed references to headstacks, passes, tapes
@@ -100,19 +101,16 @@ C  LOCAL:
 
       integer ix,ib,ic,i,ia,icode,istn
       integer il,im,in, iret,ierr1,iul,ism,ip,ipc,itone
-      integer iinc,ireinit
       integer ifanfac
-
-      integer irtrk(18,max_roll_def)
-
+    
       double precision bitden_das
-      integer npcaldefs,nrdefs,nrsteps
+      integer npcaldefs
       integer nchdefs,nbbcdefs,nifdefs,nfandefs,nhdpos
 
       character*8 cpre
       character*16 cm
 
-      character*4 cmodu, croll ! ON or OFF
+      character*4 cmodu ! ON or OFF
 
 ! IF related parameters.
       character*6 cifdref(max_ifd)
@@ -245,9 +243,6 @@ C    Assign a code to the mode and the same to the name
 ! Find what kind of recorder.
           kDiskRec=.true.
 
-C         Initialize roll to blank
-          cbarrel(istn,icode)=" "
-
 C         Get $FREQ statements. If there are no chan_defs for this
 C         station, then skip the other sections.
           CALL vunpfrq(modedefnames(icode),stndefnames(istn),
@@ -322,26 +317,6 @@ C         Get $HEAD_POS and $PASS_ORDER statements.
 ! Now set to default since no disk recording...
           nhdpos=1
 
-          if (ierr.ne.0) then
-            write(lu,'("VMOINP07 - Error getting $HEAD_POS and",
-     .        "$PASS_ORDER information for mode",a, " station ",a,
-     .         /, " iret=",i5," ierr=",i5)')
-     .      modedefnames(icode)(1:il),stndefnames(istn)(1:im),iret,ierr
-            call errormsg(iret,ierr,'HEAD_POS',lu)
-            ierr1=5
-          endif
-
-C         Get $ROLL statements.
-          call vunproll(modedefnames(icode),stndefnames(istn),ivexnum,
-     .      iret,ierr,lu,croll,irtrk,iinc,ireinit,nrdefs,nrsteps)
-          if (ierr.ne.0) then
-            write(lu,'("VMOINP08 - Error getting $ROLL information",
-     .      " for mode ",a," station ",a,/" iret=",i5," ierr=",i5)')
-     .      modedefnames(icode)(1:il),stndefnames(istn)(1:im),iret,ierr
-            call errormsg(iret,ierr,'ROLL',lu)
-            ierr1=6
-          endif
-
 C         Get $PHASE_CAL_DETECT statements.
           call vunppcal(modedefnames(icode),stndefnames(istn),ivexnum,
      >        iret,ierr,lu,cpcalref,ipct,ntones,npcaldefs,
@@ -352,13 +327,10 @@ C    point there were no reading or content errors for this station/mode
 C    combination. Some consistency checks are done here.
 C
 
-
-
 ! prior to 2018Oct03, did not use ifc.
 ! 'ifc' keeps track of number of independnent channels.
 !  if have same channel configuration except for sidebands,  corresponds to same ifc.
 !  Because of this  final ifc can less than nchdefs.
-
 
           ifc=1   !initialize
 C    Save the chan_def info and its links.
@@ -427,9 +399,10 @@ C           Phase cal refs
             endif
 C           Track assignments
 
-            ip=1 !pass is always 1
+            ip=1 !pass is always 1            
             do ix=1,nfandefs ! check each fandef
-              if (ctrchanref(ix).eq.cchanidref(i)) then ! matched link
+!               write(*,*) ctrchanref(ix), cchanidref(i) 
+              if (ctrchanref(ix).eq.cchanidref(i)) then ! matched link                
                 ism=1 ! sign
                 if (csm(ix).eq.'m') ism=2 ! magnitude
                 iul=1 ! usb
@@ -448,9 +421,11 @@ C           Track assignments
                 call add_track(itrk(ix),iul,ism,ihdn(ix),ifc,ip)
                 kadd_track_map=.true.
               endif ! matched link
-            enddo ! check each fandef
+            enddo ! check each fandef 
+!            stop
           enddo ! each chan_def line
           nchan(istn,icode)=ifc
+!          stop 
 
 C
 C    3.2 Save the non-channel specific info for this mode.

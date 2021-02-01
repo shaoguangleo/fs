@@ -36,6 +36,7 @@
 
 ! History.
 ! Now put in changes in reverse order.
+! 2020-01-31 JMG  Stop if specified too many tracks for this equipment type. 
 ! 2020-01-25 JMG. Get lmode_cmd  now determined externally and placed in drcom.ftni
 ! 2020-02-20 JMG. Change ASTRO-->VLBA if not DBBC or
 !
@@ -293,6 +294,12 @@
               if (itras(isb,ibit,ihd,ic,ipass,istn,icode).ne.-99) then         !number of tracks set.
                 ib=ibbcx(ic,istn,icode)   !this is the BBC#
                 num_tracks=num_tracks+1
+                if(num_tracks .gt. 2*max_csb) then
+                  write(*,*)
+     &             "Specified too many tracks for rack ",cstrack_cap
+                  write(*,*) "Check rack type!" 
+                  stop
+                endif 
 
                 write(lsked_csb(num_tracks),'(i2.2,a1,a1)')
      >            ib, lul(isb_out), lsm(ibit)

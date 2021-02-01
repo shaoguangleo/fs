@@ -1,7 +1,8 @@
 C  Common Block statement for DRUDG
 ! Newer changes now at top
-! 2020-01-25  JMG Removed RA50, DEC50. Moved to skdrincl/source.ftni sorp1950
-! 2020-01-25  JMG Added vdif_thread 
+! 2021-01-31  JMG Changed most prompts to char*6 so that "IGNORE" is now an option 
+! 2021-01-25  JMG Removed RA50, DEC50. Moved to skdrincl/source.ftni sorp1950
+! 2021-01-25  JMG Added vdif_thread 
 ! 2020-12-30  JMG Added in setup_proc
 ! 2020-06-30  JMG Got rid of kmissing (see if pass information is absent)
 ! 2019-08-25  JMG Added imark6_off to support broadband
@@ -87,9 +88,14 @@ c
       character*6 cpid
       character*4 cepoch
 
-      character*4 lsetup_proc,tpid_prompt,lvsi_align_prompt
-      character*4 lvdif_thread
-      character*4 cont_cal_prompt,cont_cal_Polarity
+      character*6 lsetup_proc_orig                    !value of SETUP_proc in skedf.ctl (if not set then "IGNORE")
+      character*6 lsetup_proc                         !value used.  
+
+      character*6 lvdif_thread_orig                   !Value of lvdif_thread in skedf.ctl. 
+      character*6 lvdif_thread                        !value used in program. 
+      character*6 tpid_prompt,lvsi_align_prompt
+      character*6 cont_cal_prompt,cont_cal_Polarity
+      
 
 
       character*12 lmode_cmd     !bit_streams, fb_mode, mk5b_mode etc..   
@@ -103,7 +109,9 @@ c
      >    lstname,tmpname,pntname,ctmpnam,prcname,cprtlan,cprtpor,
      >    cprttyp,cprport,cprtlab,clabtyp,labname,ctextname,
      >    cpaper_size,coption,cpid,cepoch,
-     >    lsetup_proc,tpid_prompt,lvsi_align_prompt,lvdif_thread,
+     >    lsetup_proc_orig, lsetup_proc,
+     >    lvdif_thread_orig, lvdif_thread,
+     >    tpid_prompt,lvsi_align_prompt,
      >    cont_cal_prompt,cont_cal_Polarity,
      >    lmode_cmd,lext_vdif,cbuf  
 

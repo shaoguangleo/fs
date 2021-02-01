@@ -549,6 +549,10 @@ C 2004Jul13 JMGipson. Fixed bug in scan names.
 
 
 ! New option.  lsetup_proc 
+! Note that we preserve the original value.  
+      lsetup_proc=lsetup_proc_orig
+      if(lsetup_proc_orig .eq. "IGNORE") lsetup_proc ="NO"
+    
       if(lsetup_proc .eq. "ASK") then
          lresponse="?"
          do while(.not.(lsetup_proc .eq. "YES" 

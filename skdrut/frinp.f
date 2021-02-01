@@ -128,6 +128,7 @@ C 2003Jul25 JMG  ITRAS changed to function
 ! 2013Sep19 JMGipson made sample rate station dependent
 ! 2015Jun05 JMG Modified to use new version of itras. 
 ! 2016Dec05 JMG. Fixed bug in reading in samplate rate. Previously  applied the sample rate to "1,ns". Now to "1,nstatn" 
+! 2021-01-31 JMG Removed reference to barrel 
 
 
 C
@@ -422,32 +423,7 @@ C 5. This is the sample rate line.
       endif ! sample rate
 
 C 6. This section for the barrel roll line.
-
-      if (lchar .eq. "B") then ! barrel
-        if (ns.gt.0) then ! station names on "B" line
-          do is=1,ns ! for each station name found on the line
-            i=iwhere_in_string_list(cstnna,nstatn,cst(is))
-            if (i.eq.0) then ! no match
-              write(lu,9401) cst(is)
-9401          format('FRINP06 - Station ',a,' not selected. ',
-     .        'Barrel roll for this station ignored.')
-            else ! save it
-              cbarrel(i,icode)=cbar(is)
-              if(cbarrel(i,icode)(1:1) .eq. "8") ir=1
-              if(cbarrel(i,icode)(1:2) .eq. "16") ir=2
-              if (ir.eq.1.or.ir.eq.2) then ! fill roll table
-                iroll_inc_period(i,icode) = ircan_inc(ir)
-                iroll_reinit_period(i,icode) = ircan_reinit(ir)
-                nrolldefs(i,icode)  = nrcan_defs(ir)
-                nrollsteps(i,icode) = nrcan_steps(ir)
-                call init_roll_type(is,icode,nrcan_defs(ir),
-     >              nrcan_steps(ir),icantrk(1,1,ir))
-              endif ! fill roll table
-            endif ! save it
-          enddo ! each station name found on the line
-        endif ! station names on "B" line
-      endif ! barrel
-
+ 
 C 7. This section for the recording format line.
 
       if (lchar .eq."D" ) then ! format

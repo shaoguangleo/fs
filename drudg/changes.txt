@@ -1,8 +1,13 @@
-This is a summary of changes introduced in providing support for DBBC3.
+This is a summary of changes introduced in providing support for DBBC3. Some routines appear in several places. 
 
 Deleted files:
   drudg/snap_check.f                 Don't need to do tape check.
+  skdrut/ckroll.f                    Don't need roll info
+  skdrut/iroll_def.f
+  skdrincl/iroll_def_cmn.ftni     
   skdrut/unphd.f                     Don't need to read headstack info
+  skdrut/vunphp.f                    Don't need headstack or pass info.
+  skdrut/vunproll.f                  Don't need roll information 
 
 Changes required to support new rack DBBC3. 
   skdrincl/valid_hardware.ftni      Increased number of RACKS. 
@@ -27,23 +32,41 @@ New routines:
   durdg/proc_thread.f                New procedure
   drudg/proc_get_mode_vdif.f         Pulled similar code out of several routines and made a subroutine.
  
-Rewritten or substantially modified. 
+Modified to support DBBC3  or new features
   skdrincl/skparm.ftni               Reorganized to group related items together.  
   drudg/cband_char.f                 Rewritten to make logic clearer.
   drudg/drudg_rdctl.F                Modified to parse new options is skedf.ctl.
   drudg/procs.f                      Modified for DBBC.  Outuput new procedures 
+  drudg/proc_exper_initi.f           Handle DBBC3 
   drudg/proc_ifd.f                   Handle DBBC3
   drudg/proc_setup.f                 Generate new function calls. Support for DBBC
   drudg/proc_track_masklines.f       Modification for DBBC3
   drudg/proc_tracks.f                Modification for DBBC3
-  drudg/proc_vc_cmd.f                Modification for DBBC. 
+  drudg/proc_vc_cmd.f                Modification for DBBC3. 
   
-  skdrut/vunpif.f                    Modified to include new valid IFs for DBBC3
-
+  skdrut/skdrini.f                   Get rid of roll intialization 
+  skdrut/vmoinp.f                    Don't read in barrel roll. 
+  skdrut/vobinp.f                    Prettier print when writing out # of observations. 
+  skdrut/vunpif.f                    Modified to include new valid IFs for DBBC3. 
+                                     Also acept more polarizations and translate them. H, X-->L,  V, Y -->R
 
 Fixed sleeping bug:
   drudg/proc_write_define.f          If name of procedure was passed like:  call proc_write_define(lufile,luscn, 'foobaz') 
                                      then would cause drudg to crash under f77.
+  drudg/proc_disk_tracks.f           Stop if # of tracks specifed is larger than can be handled by DBBC.  
+                                     This might happen if you specify track layout for DBBC3, but did not change equipment.
+
+Changes related to getting rid of barre roll
+ 
+ drudg/proc_form.f                   Don't write out stuff dealing with barrell roll 
+ skdrut/count_freq_tracks.f          Dont'f fudge because of roll 
+ skdrut/frinit.f                     Don't inialize barrell roll
+ skdrut/frinp.f                      Don't read it in. 
+ skdrut/skdrini.f                    Don't initialize barell roll  
+ skdrut/vmoipn.f                     Don't read initialize or read in barrel roll info
+ 
+ 
+
 Miscellaneous
   drudg/equip_type.f                 Omit second recorder. 
 

@@ -37,6 +37,7 @@ C 31Jul2003  JMG Made itras virtual.
 C 26Aug2003  JMG made cbarrel, cinfip character strings.
 ! 2013Sep19  JMGipson made sample rate station dependent
 ! 2018Oct03  JMG. Don't initialize lcode. Done elsewhere.
+! 2021-01-31 JMG Removed references to barrel 
 
 
       include '../skdrincl/skparm.ftni'
@@ -55,8 +56,7 @@ C Local
           do k=1,max_band
             trkn(k,i,j)=0.0
             ntrkn(k,i,j)=0
-          enddo
-          cbarrel(i,j)="NONE"
+          enddo   
           enddo
       enddo
       do i=1,nco

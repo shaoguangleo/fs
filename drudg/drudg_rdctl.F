@@ -138,8 +138,8 @@ C  LOCAL VARIABLES
       cont_cal_prompt="off" 
       cont_cal_polarity=" "    !default is none!
       lvsi_align_prompt= " "   !default is none!
-      lsetup_proc="NO" 
-      lvdif_thread="NO"
+      lsetup_proc_orig   ="IGNORE"    !Don't do anything or ask questions. 
+      lvdif_thread_orig  ="IGNORE"    !Don't do anything.  
       ktarget_time=.false.
       klo_config=.false. 
       kignore_mark5b_bad_mask=.false.
@@ -418,11 +418,11 @@ C         EQUIPMENT
               else if(lkeyword .eq. "USE_SETUP_PROC") then
                 call capitalize(lvalue)
                 if(lvalue .eq. "Y" .or. lvalue .eq. "YES") then
-                  lsetup_proc="YES"
+                  lsetup_proc_orig="YES"
                 else if(lvalue .eq. "N" .or. lvalue .eq. "NO") then
-                  lsetup_proc="NO"
+                  lsetup_proc_orig="NO"
                 else if(lvalue .eq. "ASK") then
-                  lsetup_proc="ASK"
+                  lsetup_proc_orig="ASK"
                 else
                   write(luscn, *) "RDCTL Error: Invalid USE_SETUP_PROC " 
      &                 //lvalue(1:10) 
@@ -430,11 +430,11 @@ C         EQUIPMENT
               else if(lkeyword .eq. "VDIF_SINGLE_THREAD_PER_FILE") then
                 call capitalize(lvalue)
                 if(lvalue .eq. "Y" .or. lvalue .eq. "YES") then
-                  lvdif_thread="YES"
+                  lvdif_thread_orig="YES"
                 else if(lvalue .eq. "N" .or. lvalue .eq. "NO") then
-                  lvdif_thread="NO"
+                  lvdif_thread_orig="NO"
                 else if(lvalue .eq. "ASK") then
-                  lvdif_thread="ASK"
+                  lvdif_thread_orig="ASK"
                 else
                   write(luscn, *) 
      &               "RDCTL Error: Invalid VDIF_SINGLE_THREAD_PER_FILE" 

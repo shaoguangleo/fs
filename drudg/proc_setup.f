@@ -215,9 +215,13 @@ C  PCALFff
   
         call proc_tracks(icode,num_tracks_rec_mk5)
 
-        if(cstrec_cap.eq."FLEXBUFF" .or. cstrec_cap.eq."MARK5C") then 
-          cproc_thread="thread"//codtmp
-          write(lu_outfile,'(a)') cproc_thread
+        if(cstrec_cap.eq."FLEXBUFF" .or. cstrec_cap.eq."MARK5C") then
+          if(lvdif_thread .eq. "IGNORE" ) then 
+            continue
+          else
+            cproc_thread="thread"//codtmp
+            write(lu_outfile,'(a)') cproc_thread
+          endif 
         endif        
 
         if(cstrack_cap .eq. "DBBC3_DDC") then 

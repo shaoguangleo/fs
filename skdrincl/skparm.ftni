@@ -31,6 +31,7 @@ C so that drudg will compile and load.
 C********************************************************************
 C
 ! Now put in recent changes at the top.
+! 2021-01-31 JMG Remove stuff related to roll
 ! 2021-01-05 JMG Replaced max_frq by max_code. (Max_frq was confusing and led to coding errors.)
 ! 2021-01-05 JKMG Max_trk appears to be duplicate of max_track.  Removed.
 ! 2021-01-05 JMG Some rearrangement to group common items together 
@@ -217,7 +218,7 @@ C
       integer max_headstack 
       parameter (max_headstack = 2)
 
-      integer max_subpass,max_roll_def
+      integer max_subpass
 
 C     Maximum number of index positions for the headstacks.
       integer max_index 
@@ -230,10 +231,6 @@ C
 C     Maximum number of passes that are possible.
       integer max_pass
       parameter (max_pass = max_index*max_subpass)
-
-C     Maximum number of roll_def statements
-      integer max_roll_Def 
-      parameter (max_roll_def = max_track)
 
 
 C     Lengths for thick and thin tape.

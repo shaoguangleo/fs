@@ -24,6 +24,7 @@ C  This routine gets all the observations from the vex file.
 C
 C History
 ! Update now in reverse order
+! 2021-01-31 JMG Prettier printing when reading in obs.  
 ! 2020-12-30 JMG Removed some obsolete code
 ! 2019-11-20 WEH Changed f77 line to f90 for backward compatibility
 ! 2019-08-27 JMG Fixed bug in converting date. Need to initialize istart because conversion routine is only setting lower bytes
@@ -108,7 +109,7 @@ C  LOCAL:
 
 C 1. Get scans one by one.
 
-      write(lu,"('VOBINP - Generating observations ',$)")
+      write(lu,"('VOBINP - Reading observations ')")
       nobs=0
       ierr = 1 ! station
       iret=0
@@ -126,11 +127,14 @@ C 1. Get scans one by one.
         if(iret .ne. 0) then
           if(ierr .gt. 0) ierr=0
           if(ierr .eq. 0) iret=0
-          write(lu, '(i6," scans in this schedule.")') nobs
+          write(lu,'(a)') " " 
+          write(lu, '(a,i6)') "Scans in this schedule = ", nobs
           return
         endif
-      
-        if (mod(nobs,100).eq.0) write(lu,'(i5,$)') nobs
+        if(nobs .gt. 1) then 
+          if (mod(nobs,100).eq.0) write(lu,'(i5,$)') nobs
+          if (mod(nobs,1000) .eq. 0) write(lu,'(a)') " "
+        endif 
 
         do i=1,5
           istart(i)=0

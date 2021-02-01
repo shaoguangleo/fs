@@ -34,6 +34,7 @@ C   COMMON BLOCKS USED
 !  2008Jun10  Wasn't counting tracks if recorder was S2?
 ! 2013Sep19  JMGipson made sample rate station dependent
 ! 2016Dec05 JMGipson. Error in setting the sample rate. Used first stations VC BW. Now uses stations BW.
+! 2021-01-31 JMG Don't check barrel roll 
 
 ! functions
       integer itras
@@ -118,23 +119,7 @@ C                        Two-thirds of the data on a switched track are used
           enddo
 ! Issue warning.
           itrk_tot=(ntrkn(1,is,ic)+ntrkn(2,is,ic))*ifan(is,ic)
-          if(itrk_tot .ne. 0) then
-            if(cbarrel(is,ic) .ne. "NONE" .and.
-     >          cbarrel(is,ic) .ne. "off" .and.
-     >          cbarrel(is,ic) .ne. " ") then
-              if(itrk_tot .ne. 8 .and. itrk_tot .ne. 16 .and.
-     >           itrk_tot .ne. 32 .and. itrk_tot .ne. 64) then
-                nch=trimlen(cbarrel(is,ic))
-                write(*,'(4(a))')
-     >           "Count_freq_tracks  warning:  Barrel roll ",
-     >            cbarrel(is,ic)(1:nch),
-     >            " is not allowed for ", cstnna(is)
-                write(*,'(a,a,i2)') " # of tracks must be one of ",
-     >            "(8,16,32,64). Actual number is: ", itrk_tot
-              endif
-            endif
-          endif
-        enddo
+         enddo
       enddo
 
 C  1.5 Calculate sample rate if not specified.

@@ -367,32 +367,34 @@ C INITIALIZED VARIABLES:
       endif ! get TPID period
 
 ! New option.  lvdif_thread
-      if(cstrec_cap .eq. "FLEXBUFF" .or. 
-     &   cstrec_cap .eq. "MARK5C") then 
-      if(lvdif_thread .eq. "ASK") then
-         lresponse="?"
-         do while(.not.(lvdif_thread .eq. "YES" 
-     &             .or. lvdif_thread .eq. "NO")) 
-           write(*,'("Vdif_single_thread_per_file (Yes/No): ",$)') 
-           read(*,*) lresponse
-           call capitalize(lresponse) 
-           if(lresponse .eq."YES" .or. lresponse .eq. "Y") then
-              lvdif_thread="YES"
-           else if(lresponse .eq. "NO" .or. lresponse .eq. "N") then 
-              lvdif_thread="NO"
-           else
-              write(*,*) "Invalid response. Try again. " 
-           endif 
-         end do    
-      endif      
-      if(lvdif_thread .eq. "YES") then
-         write(*,*) "Will use single threadper file"
-      else
-         write(*,*) "Will use multiply threads per file"
-      endif
-      endif  
-   
-      
+
+! Valid options for lvdif_thread:  YES, NO, ASK, IGNORE
+      if(cstrec_cap .eq. "FLEXBUFF" .or. cstrec_cap .eq. "MARK5C") then 
+        lvdif_thread=lvdif_thread_orig 
+        if(lvdif_thread .eq. "ASK") then
+           lresponse="?"
+           do while(.not.(lvdif_thread .eq. "YES" 
+     &               .or. lvdif_thread .eq. "NO")) 
+             write(*,'("Vdif_single_thread_per_file (Yes/No): ",$)') 
+             read(*,*) lresponse
+             call capitalize(lresponse) 
+             if(lresponse .eq."YES" .or. lresponse .eq. "Y") then
+               lvdif_thread="YES"
+             else if(lresponse .eq. "NO" .or. lresponse .eq. "N") then 
+               lvdif_thread="NO"
+             else
+               write(*,*) "Invalid response. Try again. " 
+            endif 
+          end do 
+        endif   
+!  At this point have set it up. Indicate result.          
+        if(lvdif_thread .eq. "YES") then
+           write(*,*) "Will use single thread per file"
+        else if(lvdif_thread .eq. "NO") then 
+           write(*,*) "Will use multiply threads per file"
+        endif         
+      endif 
+         
       WRITE(LUSCN,'( "Procedures for ",a)') cstnna(istn)
 C
       call purge_file(prcname,luscn,luusr,kbatch,ierr)
