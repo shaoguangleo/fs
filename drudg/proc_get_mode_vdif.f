@@ -25,6 +25,7 @@
       logical kfila10g
    
 ! History.
+! 2021-02-08  JMG Now vdif for Flexbuff and Mark5C. Previously only if fil10g. 
 ! 2021-01-25  JMG now sets lext_vdif and lmode_mcd in drcom.ftni
 ! 2020-12-29. JMG First version. Used by proc_dbbc_pfb_tracks and proc_disk_tracks, proc_dbbc3_ddc...
 
@@ -33,10 +34,10 @@
          lmode_cmd="mk5b_mode"
       else if(cstrec .eq. "FlexBuff") then
          lmode_cmd="fb_mode"
-         if(kfila10g) lext_vdif="vdif"
+         lext_vdif="vdif"
       else if(cstrec .eq. "Mark5C") then
          lmode_cmd="mk5c_mode"
-         if(kfila10g) lext_vdif="vdif"
+         lext_vdif="vdif"
       else
          lmode_cmd="bit_streams"
       endif

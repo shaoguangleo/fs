@@ -30,6 +30,7 @@ C Version 9.0 is supported with this routine.
       include '../skdrincl/data_xfer.ftni'
 
 ! History Now with most recent at top. 
+! 2021-02-08 JMG Introuduced lvdif_thread
 ! 2021-01-05 JMG Replaced max_frq by max_code. (Max_frq was confusing and led to coding errors.)
 ! 2020-12-31 JMG Got rid of 2-recorder stuff for K4 recordders (no more two recorders)
 ! 2020-06-30 JMG Got rid of test on kmissing (which checked if missing tape info)
@@ -392,7 +393,8 @@ C INITIALIZED VARIABLES:
            write(*,*) "Will use single thread per file"
         else if(lvdif_thread .eq. "NO") then 
            write(*,*) "Will use multiply threads per file"
-        endif         
+        endif    
+        lvdif_thread_orig=lvdif_thread     !this makes the results stick.      
       endif 
          
       WRITE(LUSCN,'( "Procedures for ",a)') cstnna(istn)

@@ -260,6 +260,7 @@ C     data cvpass /'abcdefghijklmnopqrstuvwxyzAB'/
 C
 C History:
 ! Now put in most recent first. 
+! 2021-02-08 JMG lsetup_proc. now if changed the change sticks. You have to restart drudg
 ! 2021-01-20 JMG if lsetup_proc="YES" always use setup_proc. 
 ! 2021-01-20 JMG setup=SETUPBB if cstrack(istn)="BB" 
 ! 2020-12-30 JMG Removed variables which were not used.  Removed obsolete check procedure.
@@ -550,6 +551,7 @@ C 2004Jul13 JMGipson. Fixed bug in scan names.
 
 ! New option.  lsetup_proc 
 ! Note that we preserve the original value.  
+! Opps! changed our mind. See last line at the end of this section.
       lsetup_proc=lsetup_proc_orig
       if(lsetup_proc_orig .eq. "IGNORE") lsetup_proc ="NO"
     
@@ -574,6 +576,7 @@ C 2004Jul13 JMGipson. Fixed bug in scan names.
       else
          write(*,*) "Will use normal setup" 
       endif 
+      lsetup_proc_orig=lsetup_proc    !this makes the change permanent. 
          
       irec=1
 

@@ -55,6 +55,12 @@ Fixed sleeping bug:
                                      then would cause drudg to crash under f77.
   drudg/proc_disk_tracks.f           Stop if # of tracks specifed is larger than can be handled by DBBC.  
                                      This might happen if you specify track layout for DBBC3, but did not change equipment.
+Fixed other bugs
+  lstsum.f, lstsumo.f                Replaced X/1024 by /X1000 when calculating Gbytes
+  drprrd.f                           Stop reading $PARAM section when you come to the end. 
+                                     Space to start of $PARAM section. (Previously location in sked/VEX file hardcoded.)
+                                     If you don't find $PARAM exit
+                               
 
 Changes related to getting rid of barre roll
  
