@@ -35,6 +35,10 @@
 ! function
 !      integer iwhere_in_string_list
 
+
+! History
+! 2021-02-12 JMG  First debugged version 
+
 ! DBBC3_DDCs 128 BBCs.  
 ! The BBCs are tied to 8 boards, with each board having 16 BBCs.  The order is
 !           Mask2   Mask1
@@ -51,8 +55,8 @@
 !  We start with one mask for each BBC and set the appropriate bitrs.
 !  Then we use this to set the bits in ibrdmask.
       integer*4 imask(8,2) 
-      integer   ibbc_mask(max_bbc)
-      character*5 lsked_csb(max_chan)  !for debugging purposes. 
+      integer  ibbc_mask(max_bbc)
+      character*5 lsked_csb(max_chan*2)  !for debugging purposes. 
       integer*4 imask_temp
       integer ibrd                   !which board 
       integer ihalf
@@ -91,13 +95,17 @@
       ipass=1
 !      write(*,*)
       if(kdebug) then
-        write(*,'(a)') "  sb   sbo   bit  bbc  chan pass stn  code  CSB"
+        write(*,*) " " 
+        write(*,'(a)')
+     &   "  chan bbc   sb   sbo   bit pass stn code  CSB    MSK"
+
       endif
     
 ! Go through all of the channels. 
 !    if(kdebug) write(*,*) "ic ibbc isb ibit" 
       num_tracks=0
-      do ic=1,max_chan
+      do ic=1,nchan(istn,icode)
+         ibbc=ibbcx(ic,istn,icode)   !this is the BBC#
          do isb=1,2
             isb_out=isb
             if(abs(freqrf(ic,istn,icode)).lt.freqlo(ic,istn,icode)) then
@@ -107,7 +115,6 @@
             do ihd=1,1
             do ibit=1,2 
               if (itras(isb,ibit,ihd,ic,ipass,istn,icode).ne.-99) then         !number of tracks set.
-                ibbc=ibbcx(ic,istn,icode)   !this is the BBC#
                 num_tracks=num_tracks+1
 
 !                 if(kdebug) write(*,'(4i4)') ic, ibbc,  isb, ibit 
@@ -128,8 +135,10 @@
                 write(lsked_csb(num_tracks),'(i3.3,a1,a1)')
      >            ibbc, lul(isb_out), lsm(ibit)
                 if(kdebug) then
-                  write(*,'(8i5,1x,a)')  isb,isb_out,ibit,ibbc,ic,
-     >                   ipass,istn,icode,lsked_csb(num_tracks)
+                  write(*,'(8i5,2x,a," | ",z2.2)')  ic,ibbc,
+     >                isb,isb_out,ibit,ipass,istn,icode,
+     >                lsked_csb(num_tracks), 
+     >                ibbc_mask(ibbc)
                 endif
               endif
             enddo
@@ -137,9 +146,15 @@
         enddo
       enddo
 ! Now have all of the BBCs. Set the board_masks
+      if(kdebug) then
+         write(*,*) "BBC MSK"
+      endif 
       do ibbc=1,max_bbc
+        if(kdebug) then
+           write(*,'(i4,1x,z2.2)') ibbc, ibbc_mask(ibbc) 
+        endif  
         if(ibbc_mask(ibbc) .ne. 0) then 
-!          write(*,'("ibbc msk ",i4,1x,z8)') ibbc, ibbc_mask(ibbc)  
+
           ibbc_tmp=ibbc
           ihalf=1 
           if(ibbc .gt. 64) then

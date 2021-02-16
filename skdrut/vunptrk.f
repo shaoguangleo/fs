@@ -33,10 +33,11 @@ C
 C
 C  History:
 ! Updates newest most recent
+! 2021-02-12 JMG Changed limit to 2*max_track.  
 ! 2021-01-05 JMG replaced variable 'in' with icnt. 'IN' is fortran 90 keyword. 
-! 2021-01-05  JMG Changed limit from max_pass to max_track 
+! 2021-01-05 JMG Changed limit from max_pass to max_track 
 ! 2019-09-03 JMG. 1) Added implicit none.  Truncate track-frame format to 8 characters
-! 2016-01-19 JMG.  Doubled dimension of several variables that had max_track to 2*max_track becuase now sign& magnitude can be on same track 
+! 2016-01-19 JMG.  Doubled dimension of several variables that had max_track to 2*max_track because now sign& magnitude can be on same track 
 
 C 960520 nrv New.
 C 961122 nrv Change fget_mode_lowl to fget_all_lowl
@@ -61,26 +62,27 @@ C  OUTPUT:
       integer ierr ! error from this routine, >0 indicates the
 C                    statement to which the VEX error refers,
 C                    <0 indicates invalid value for a field
-!      integer*2 lm(4) ! recording format
+!      integer*2 lm(4) ! recording format      
       character*8 cm
-      character*1 cp(max_track*2) ! subpass
-      character*6 cchref(max_track*2) ! channel ID ref
-      character*1 csm(max_track*2) ! sign/mag
-      integer ihdn(max_track*2) ! headstack number
-      integer itrk(max_track*2) ! first track of the fanout assignment
-      integer nfandefs ! number of def statements
-      integer ifanfac ! fanout factor determined from list of tracks
-      character*3 modu ! data modulation, on or off
+      character*1 cp(max_fandef)      ! subpass
+      character*6 cchref(max_fandef)  ! channel ID ref
+      character*1 csm(max_fandef)     ! sign/mag
+      integer ihdn(max_fandef)        ! headstack number
+      integer itrk(max_fandef)        ! first track of the fanout assignment
+      integer nfandefs                ! number of def statements
+      integer ifanfac                 ! fanout factor determined from list of tracks
+      character*3 modu                ! data modulation, on or off
 C
 C  LOCAL:
       character*128 cout
       integer it(4),j,nn,icnt,i,nch
       integer fvex_len,fvex_int,fvex_field,fget_all_lowl,ptr_ch
       integer is
+
+      
 C
 C  Initialize
-C
-      do icnt=1,max_track
+      do icnt=1,max_fandef 
         cp(icnt)=' '
         cchref(icnt)=''
         csm(icnt)=' '
@@ -139,13 +141,18 @@ C
      .ptr_ch('fanout_def'//char(0)),
      .ptr_ch('TRACKS'//char(0)),ivexnum)
       icnt=0
-      do while (icnt.lt.max_track.and.iret.eq.0) ! get all fanout defs
+      do while (icnt.le.max_fandef.and.iret.eq.0) ! get all fanout defs
 !      do while (icnt.lt.max_pass.and.iret.eq.0) ! get all fanout defs
-        icnt=icnt+1 ! number of fanout defs
+        icnt=icnt+1 ! number of fanout defs        
 C  2.1 Subpass
         ierr = 21
         iret = fvex_field(1,ptr_ch(cout),len(cout)) ! get subpass
         if (iret.ne.0) return
+        if(icnt .gt. max_fandef) then
+           write(*,*) "Vunptrk:  No more space for fanout_def. Max is ",
+     &       max_fandef      
+           stop
+        endif 
         NCH = fvex_len(cout)
         if (nch.ne.1) then
           if(km5rec) then
@@ -185,7 +192,6 @@ C  2.3 Sign/magnitude
         endif
 
 C  2.4 Headstack number
-
         ierr = 24
         iret = fvex_field(4,ptr_ch(cout),len(cout)) ! get headstack number
         if (iret.ne.0) return

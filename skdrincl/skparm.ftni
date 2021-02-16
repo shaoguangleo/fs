@@ -31,6 +31,7 @@ C so that drudg will compile and load.
 C********************************************************************
 C
 ! Now put in recent changes at the top.
+! 2021-02-13 JMG Introduced max_fandef=2*max_track
 ! 2021-01-31 JMG Remove stuff related to roll
 ! 2021-01-05 JMG Replaced max_frq by max_code. (Max_frq was confusing and led to coding errors.)
 ! 2021-01-05 JKMG Max_trk appears to be duplicate of max_track.  Removed.
@@ -189,8 +190,6 @@ C
       integer max_tone 
       PARAMETER (MAX_TONE = 17)
 
-      integer max_track,max_chan
-
 !     Maximum number of IFs in a system.
       integer max_ifd 
       parameter (max_ifd = 8)
@@ -207,8 +206,10 @@ C
 !  But there are explicit chandef's for each u/l channel in VEX file, 
 !  so this is now 2* number of frequencies 
 
+      integer max_track,max_chan,max_fandef
       PARAMETER (MAX_CHAN = 2*max_bbc)
       parameter (max_track=max_chan)   
+      parameter (max_fandef=2*max_track)
 !-------------------------------------------------------------
 ! Some obsolete stuff that should be removed.
       integer max_headstack

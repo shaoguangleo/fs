@@ -133,11 +133,15 @@ C  LOCAL:
       double precision frf(max_chan),flo(max_chan),vbw(max_chan)
       double precision fpcal(max_chan),fpcal_base(max_chan)
 
-! Things that depend on number of tracks.
-      character*6 ctrchanref(2*max_track)
-      character*1 cp(2*max_track),csm(2*max_track)
-      integer ihdn(2*max_track)
-      integer itrk(2*max_track),ivc(2*max_bbc)
+! Things that depend on number of fandefs
+      character*1 cp(max_fandef)           ! subpass
+      character*6 ctrchanref(max_fandef)   ! channel ID ref
+      character*1 csm(max_fandef)          ! sign/mag
+      integer ihdn(max_fandef)             ! headstack number
+      integer itrk(max_fandef)             ! first track of the fanout assignment
+
+
+      integer ivc(2*max_bbc)
 
 !things that depend pass.   
       double precision srate
@@ -402,7 +406,7 @@ C           Track assignments
             ip=1 !pass is always 1            
             do ix=1,nfandefs ! check each fandef
 !               write(*,*) ctrchanref(ix), cchanidref(i) 
-              if (ctrchanref(ix).eq.cchanidref(i)) then ! matched link                
+              if (ctrchanref(ix).eq.cchanidref(i)) then ! matched link           
                 ism=1 ! sign
                 if (csm(ix).eq.'m') ism=2 ! magnitude
                 iul=1 ! usb
@@ -419,14 +423,13 @@ C           Track assignments
                   endif
                 endif
                 call add_track(itrk(ix),iul,ism,ihdn(ix),ifc,ip)
-                kadd_track_map=.true.
+                kadd_track_map=.true.     
               endif ! matched link
             enddo ! check each fandef 
 !            stop
           enddo ! each chan_def line
           nchan(istn,icode)=ifc
 !          stop 
-
 C
 C    3.2 Save the non-channel specific info for this mode.
 C         Recording format, "Mark3", "Mark4", "VLBA".
