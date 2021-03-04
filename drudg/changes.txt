@@ -1,10 +1,16 @@
+Drudg changes to support DBBC3
+2021-02-27
+John Gipson 
+
 This is a summary of changes introduced in providing support for DBBC3. Some routines appear in several places. 
+This only lists changes from FS 10.00.00
+
 
 Deleted files:
   drudg/snap_check.f                 Don't need to do tape check.
   skdrut/ckroll.f                    Don't need roll info
-  skdrut/iroll_def.f
-  skdrincl/iroll_def_cmn.ftni     
+  skdrut/iroll_def.f                 Don't need roll info
+  skdrincl/iroll_def_cmn.ftni        Don't need roll info
   skdrut/unphd.f                     Don't need to read headstack info
   skdrut/vunphp.f                    Don't need headstack or pass info.
   skdrut/vunproll.f                  Don't need roll information 
@@ -48,7 +54,8 @@ Modified to support DBBC3  or new features
   skdrut/vmoinp.f                    Don't read in barrel roll. 
   skdrut/vobinp.f                    Prettier print when writing out # of observations. 
   skdrut/vunpif.f                    Modified to include new valid IFs for DBBC3. 
-                                     Also acept more polarizations and translate them. H, X-->L,  V, Y -->R
+                                     Also accept more polarizations and translate them. H, X-->L,  V, Y -->R
+  skdrut/vunptrk.f                   Changed dimension of variable. Issue error message if exhaust array space while reading in. 
 
 Fixed sleeping bug:
   drudg/proc_write_define.f          If name of procedure was passed like:  call proc_write_define(lufile,luscn, 'foobaz') 
@@ -62,8 +69,7 @@ Fixed other bugs
                                      If you don't find $PARAM exit
                                
 
-Changes related to getting rid of barre roll
- 
+Changes related to getting rid of barrel roll 
  drudg/proc_form.f                   Don't write out stuff dealing with barrell roll 
  skdrut/count_freq_tracks.f          Dont'f fudge because of roll 
  skdrut/frinit.f                     Don't inialize barrell roll
@@ -77,10 +83,6 @@ Miscellaneous
   drudg/equip_type.f                 Omit second recorder. 
 
 The following are changes of a more cosmetic nature, or introduced to reduce confusion.
-
-Moved files:  
-  skdrincl/iroll_def.ftni  --> skdrut/iroll_def.ftni.   
-  skdrut/iroll_def.f          Modified to point to new location. 
 
 Removed unused variables to minimize warning messages during compilation.
   drudg/bbbuf.f

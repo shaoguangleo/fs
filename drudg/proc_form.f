@@ -21,6 +21,7 @@
 ! 2013Sep19  JMGipson made sample rate station dependent
       implicit none  !2020Jun15 JMGipson automatically inserted.
 
+! 2021-02-26 JMG Removed obsolete function ichmv
 ! 2021-01-31 JMG removed barrel roll 
 
 C  FORM=m,r,fan,barrel,modu   (m=mode,r=rate=2*b)
@@ -42,7 +43,6 @@ C  For 8-BBC stations, use "M" for Mk3 modes
       integer ib2as
       integer ir2as
       integer ichmv_ch
-      integer ichmv
 
       logical kCheckGrpOr
       integer trimlen

@@ -26,7 +26,7 @@ C
 ! This just handles handles drudg.
 
 ! Updates....
-! 2021-01-25 JMG New  optoin: vdif_single_thread_per_file   
+! 2021-01-25 JMG New  option: vdif_single_thread_per_file   
 ! 2021-01-14 JMG Increased max_token 
 ! 2021-01-11 JMG Modified to account for DBBC3
 ! 2020-12-30 JMG New option in skedf.ctl:  SETUP_PROC. [YES|NO|ASK] default is NO
