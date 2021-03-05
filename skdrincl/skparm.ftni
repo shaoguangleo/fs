@@ -212,7 +212,6 @@ C
       parameter (max_fandef=2*max_track)
 !-------------------------------------------------------------
 ! Some obsolete stuff that should be removed.
-      integer max_headstack
 !     Maximum number of headstacks. Limited to 2 within sked/drudg
 !     for now. Change to 1 to save space.
 

@@ -29,7 +29,7 @@
       integer i    !counter
       real       bw_test 
 !
-      data cband/"abc1238defgh"/
+      data cband/"abc1248defgh"/
 ! Return a character     
 ! Start at BW=0.125MHz and double.
 ! .125 MHz=a

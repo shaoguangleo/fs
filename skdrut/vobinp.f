@@ -77,7 +77,6 @@ C  LOCAL:
       character*128 cmo,cstart,cout,cunit,cscan_id
       character*(max_sorlen) csor
       integer istart(5)
-      integer i
       double precision d,start_sec
       integer idstart,idend
   

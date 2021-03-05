@@ -35,11 +35,12 @@ C   COMMON BLOCKS USED
 ! 2013Sep19  JMGipson made sample rate station dependent
 ! 2016Dec05 JMGipson. Error in setting the sample rate. Used first stations VC BW. Now uses stations BW.
 ! 2021-01-31 JMG Don't check barrel roll 
+! 2021-03-05 Issue warning here if mode not defined for a station. Prevously done in itras. 
 
 ! functions
       integer itras
+      integer itras_map
       integer iwhere_in_string_list
-      integer trimlen
 
 ! passed
       character*2 cbnd(2)
@@ -49,9 +50,7 @@ C
 C  LOCAL VARIABLES
       integer ierr,ip,ic,i,iv,is,isub,iul
       integer ih
-      integer nch
       character*3 cs
-      integer itrk_tot
 C
 C  1. Count number of frequencies and the number of tracks being
 C     recorded at each station on each frequency.
@@ -62,7 +61,14 @@ C
       cbnd(1)=" "
       cbnd(2)=" "
       do ic=1,ncodes
-        do is=1,nstatn
+         do is=1,nstatn
+! Quick check to see if the mode is defined for this station. 
+          if(itras_map(is,ic) .eq. 0) then
+            write(*,*) "Track map not defined for station ",cstnna(is),
+     >        " and mode ", cnafrq(ic)
+             goto 100
+          endif 
+
           nfreq(1,is,ic)=0
           nfreq(2,is,ic)=0
           do i=1,nchan(is,ic)
@@ -118,10 +124,10 @@ C                        Two-thirds of the data on a switched track are used
             endif
           enddo
 ! Issue warning.
-          itrk_tot=(ntrkn(1,is,ic)+ntrkn(2,is,ic))*ifan(is,ic)
+!          itrk_tot=(ntrkn(1,is,ic)+ntrkn(2,is,ic))*ifan(is,ic)
+100   continue  
          enddo
       enddo
-
 C  1.5 Calculate sample rate if not specified.
 
 C

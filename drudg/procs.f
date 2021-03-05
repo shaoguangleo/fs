@@ -320,7 +320,6 @@ C LOCAL VARIABLES:
       character*10 cproc_ifd            !procedure name for IFD
       character*10 cproc_core3h         !procedure name for core3h 
       character*10 cproc_thread         !procedure name for thread 
-      character*4 cpmode    
       character*4 cpmode                !mode for procedure names       
  
       character*2 codtmp

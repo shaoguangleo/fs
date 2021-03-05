@@ -50,6 +50,8 @@ Modified to support DBBC3  or new features
   drudg/proc_tracks.f                Modification for DBBC3
   drudg/proc_vc_cmd.f                Modification for DBBC3. 
   
+  skdrut/count_freq_tracks.f         If mode is not defined for a station issue warning message and don't count tracks
+  skdrut/itras.f                     Added new function itras_map(istn,icode). If 0 mode not defined for this station
   skdrut/skdrini.f                   Get rid of roll intialization 
   skdrut/vmoinp.f                    Don't read in barrel roll. 
   skdrut/vobinp.f                    Prettier print when writing out # of observations. 

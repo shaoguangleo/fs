@@ -51,7 +51,7 @@ C  LOCAL:
       character*8 cna
       equivalence (lna,cna)
       integer ib,ic,iv,ivc,i,icode,istn,inum,is,ns,ibad,j
-      integer icx,nvlist,ivlist(max_chan),ir
+      integer icx,nvlist,ivlist(max_chan)
       integer*2 lc,lsg,lm(8),lid,lin,ls
       character*2 cs,cin
       equivalence (ls,cs), (lin,cin)

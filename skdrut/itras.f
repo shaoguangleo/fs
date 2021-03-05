@@ -105,7 +105,7 @@
       endif 
       imap=istn_code_key(istn,icode)
       if(imap .eq. 0) then
-          itras=-99 
+          itras=-98 
 !         if(num_track_map .ne. 0) then
            write(*,*) "ITRAS: Mode # ",icode,
      >       " not defined for station # ",istn
@@ -125,6 +125,16 @@
      
       return
       end
+!****************************************************
+      integer function itras_map(istn,icode)
+      include 'itras_cmn.ftni'
+
+      integer istn, icode 
+! Return the internal map used for this station and code. 
+! used to see if the code is defined for this station
+      itras_map = istn_code_key(istn,icode) 
+      return 
+      end 
 !*************************************************************
       logical function ktrack_match(istn1,icode1,istn2,icode2)
       include 'itras_cmn.ftni'
