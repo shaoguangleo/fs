@@ -506,12 +506,12 @@ C         TPICD
                 if(NumToken-1 .gt. max_ifd) then 
                    write(*,*) "drudg_rdctl: Too many tokens for "//      
      >                        "DEFALUT_DBBC_IF_INPUTS"
-                   write(*,*) "can specify upto 4 inputs"
+                   write(*,*) "can specify upto ",max_ifd 
                 else
 ! Temporarily undo indent. 
                   do i=1,NumToken-1
                     lchar=ltoken(i+1)
-                    itemp=index("1234",lchar)    !See if one of these numbers
+                    itemp=index("12345678",lchar)    !See if one of these numbers
                     if(itemp .eq. 0) then
                       write(*,*) "drudg_rdctl: Invalid dbbc_if_input ", 
      >                   ltoken(i+1)(1:trimlen(ltoken(i+1)))
