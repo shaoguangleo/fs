@@ -85,12 +85,14 @@
       integer num_tracks_rec_mk5        !number we record=num obs * ifan
       integer NumTracks
       character*4   ctemp
+      logical knewline                 !Do we need to put a newline?
 
       character*80 ldum          !temporary string
       character*4 lvalid_polarity(5)
-      data lvalid_polarity/"0","1","2","3","NONE"/
-
+      data lvalid_polarity/"0","1","2","3","NONE"/     
+ 
 ! Start of code
+      knewline=.true. 
       ipass=1
       irec=1
       call setup_name(ccode(icode),cnamep)
@@ -123,7 +125,7 @@
            call capitalize(lwhich8)
          end do
       endif
-
+   
 ! Initialize cont_cal_out
       if(cstrack_cap(1:8) .eq. "DBBC_DDC" .or.
      &   cstrack_cap .eq. "DBBC3_DDC") then
@@ -133,7 +135,11 @@
      >                  cont_cal_out .eq. "off".or.
      >                  cont_cal_out .eq. "no" .or.
      >                  cont_cal_out .eq. " "))
-          write(*,'(a,$)') "Enter in cont_cal action: (on/off) "
+          if(knewline) then
+             write(*,*) " "
+             knewline=.false.
+          endif 
+          write(*,'(a,$)') "     Enter in cont_cal action: (on/off) "
           read(*,*) cont_cal_out
           call lowercase(cont_cal_out)
           kcont_cal = cont_cal_out .eq. "on"
@@ -141,8 +147,12 @@
         if(kcont_cal .and. cont_cal_polarity .eq. "ASK") then
           iwhere=0
           do while(iwhere .eq. 0)
+            if(knewline) then
+               write(*,*) " "
+               knewline=.false.
+            endif 
             write(*,'(a, $)')
-     >       "Enter in cont_cal_polarity (0-3, or none): "
+     >       "     Enter in cont_cal_polarity (0-3, or none): "
             read(*,*) cont_cal_polarity
             call capitalize(cont_cal_polarity)
             iwhere = iwhere_in_string_list(lvalid_polarity,5,
@@ -151,7 +161,12 @@
           end do
         end if
       endif
-
+      if(.not.knewline) then 
+         knewline=.true. 
+         cnamep=" "
+         call proc_write_define(lu_outfile,luscn,cnamep)
+      endif
+  
 
 C Find out if any channel is LSB, to decide what procedures are needed.
       klsblo=.false.
@@ -179,6 +194,7 @@ C  PCALON or PCALOFF
         write(lu_outfile,'(a)') 'pcaloff'
       endif
 
+    
 C  TPICD=STOP
       if(ktpicd) then
         write(lu_outfile,'(a)') 'tpicd=stop'
@@ -212,9 +228,9 @@ C  PCALFff
      >    km4rec(irec) .or.Km5disk .or. knorec(irec)) then
         lmode_cmd=" " 
         call proc_get_mode_vdif(cstrec(istn,1),kfila10g_rack)
-  
-        call proc_tracks(icode,num_tracks_rec_mk5)
 
+        call proc_tracks(icode,num_tracks_rec_mk5)
+  
         if(cstrec_cap.eq."FLEXBUFF" .or. cstrec_cap.eq."MARK5C") then
           if(lvdif_thread .eq. "IGNORE" ) then 
             continue
@@ -223,13 +239,12 @@ C  PCALFff
             write(lu_outfile,'(a)') cproc_thread
           endif 
         endif        
-
-        if(cstrack_cap .eq. "DBBC3_DDC") then 
+  
           if(lmode_cmd .ne. "bit_streams") then
             write(lu_outfile,'(a)') "jive5ab_cnfg"
-          endif
-        endif 
+          endif  
       endif
+  
   
 C REC_MODE=<mode> for K4
 C !* to mark the time
@@ -303,9 +318,8 @@ C  BBCffb, IFPffb  or VCffb
              write(lu_outfile,'("cont_cal=off")')
           endif
 
-          ldum="bbc_gain=all,agc"
           if(idbbc_bbc_target .gt. 0) then
-             write(ldum(20:30),'(",",i5)') idbbc_bbc_target
+             write(ldum,'(a,i5)') "bbc_gain=all,agc,",idbbc_bbc_target
           endif
           call drudg_write(lu_outfile,ldum)
        endif

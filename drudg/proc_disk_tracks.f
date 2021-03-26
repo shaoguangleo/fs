@@ -278,8 +278,8 @@
 !******************************************************************************
 ! Make list containing tracks we use, and keep track of the number.
 !
-      write(*,*)
       if(kdebug) then
+        write(*,*)
         write(*,'(a)') "  sb   sbo   bit  hd  chan pass stn  code  CSB"
       endif
       num_tracks=0

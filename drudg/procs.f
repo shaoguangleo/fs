@@ -476,7 +476,6 @@ C    for procedure names.
      &   itpicd_period_use,cproc_ifd,cproc_vc,cproc_core3h,cproc_thread,
      &   cpmode, lwhich8,ierr)
   
-
         if(ierr .ne. 0) goto 9100 
    
 !********  END SETUP PROCEDURE **************************************************************

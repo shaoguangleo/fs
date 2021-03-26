@@ -54,7 +54,7 @@
    
 ! This part writes the procedures to the screen.
       if(nproc .eq. 0) then             !indent first proc 5 spaces
-         WRITE(luscn,"('   Defining: ',a,$)") lnamep(1:ind) 
+         WRITE(luscn,"('   Defining:   ',a,$)") lnamep(1:ind) 
          nproc =nproc+1
       elseif(nproc .lt. 12) then
          WRITE(luscn,"(' ',a,$)") lnamep(1:ind) !skip a space for next

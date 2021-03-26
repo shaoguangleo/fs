@@ -52,7 +52,7 @@
 
       izero=0
     
-! output for DBBC_PFB rack.
+! output for DBBC_PFB rack.   
       if(cstrack_cap(1:8) .eq. "DBBC_PFB") then
         call proc_dbbc_pfb_tracks(lu_outfile,istn,icode)
         return
@@ -62,10 +62,11 @@
         call proc_dbbc3_ddc_tracks(lu_outfile,istn,icode)
         return
       endif
+ 
 
 ! Output Mark5B  recorder stuff.
       if(km5rack.or.kv5rack.or.kdbbc_rack.or.km5b.or. knorack) then
-        call proc_disk_tracks(icode)
+        call proc_disk_tracks(icode)  
         return
       endif
 
