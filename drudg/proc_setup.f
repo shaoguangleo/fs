@@ -228,7 +228,6 @@ C  PCALFff
      >    km4rec(irec) .or.Km5disk .or. knorec(irec)) then
         lmode_cmd=" " 
         call proc_get_mode_vdif(cstrec(istn,1),kfila10g_rack)
-
         call proc_tracks(icode,num_tracks_rec_mk5)
   
         if(cstrec_cap.eq."FLEXBUFF" .or. cstrec_cap.eq."MARK5C") then
@@ -237,12 +236,12 @@ C  PCALFff
           else
             cproc_thread="thread"//codtmp
             write(lu_outfile,'(a)') cproc_thread
-          endif 
-        endif        
+          endif          
   
           if(lmode_cmd .ne. "bit_streams") then
             write(lu_outfile,'(a)') "jive5ab_cnfg"
-          endif  
+          endif 
+        endif  
       endif
   
   
@@ -319,9 +318,9 @@ C  BBCffb, IFPffb  or VCffb
           endif
 
           if(idbbc_bbc_target .gt. 0) then
-             write(ldum,'(a,i5)') "bbc_gain=all,agc,",idbbc_bbc_target
-          endif
-          call drudg_write(lu_outfile,ldum)
+             write(ldum,'(a,i5)') "bbc_gain=all,agc,",idbbc_bbc_target          
+             call drudg_write(lu_outfile,ldum)
+          endif 
        endif
 
 C  !*
