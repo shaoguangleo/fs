@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.15">
-<meta name="author" content="Version 2.1 - August 2021">
+<meta name="author" content="Version 2.2 - September 2021">
 <title>FS 10.0.0 to Latest Commit Update Notes</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -440,7 +440,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>FS 10.0.0 to Latest Commit Update Notes</h1>
 <div class="details">
-<span id="author" class="author">Version 2.1 - August 2021</span><br>
+<span id="author" class="author">Version 2.2 - September 2021</span><br>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
@@ -512,7 +512,7 @@ beware.</em>
 </table>
 </div>
 <div class="paragraph">
-<p>This document is up to date with the features in the <code>64df6ffa</code>
+<p>This document is up to date with the features in the <code>d777166f</code>
 commit. Due to small increments, such as updating this document, that
 may not be the literal last commit, but the differences should be
 small unless you happen to <code>pull</code> between a significant change and
@@ -752,9 +752,52 @@ been changed back.</p>
 </div>
 </li>
 <li>
-<p>Fix <em>gndat</em>.</p>
+<p>Fix issues in <em>gnplt</em> and <em>gndat</em>:</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
+<li>
+<p>Fix plotting of working file Tcal curve on zooomed Tcal versus
+frequency plots in <em>gnplt</em> (closing
+<a href="https://github.com/nvi-inc/fs/issues/117">#117</a>).</p>
+<div class="paragraph">
+<p>Previously, if you zoomed in the Tcal versus frequency plot and
+selected display of the working file Tcal curve, it would reset the
+left plot edge to the unzoomed value when drawing the curve.  This was
+caused by an interaction of two issues:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>The program tried to draw the entire Tcal curve, not just the part
+in the zoomed frequency range.</p>
+</li>
+<li>
+<p>The function, <code>drawValues</code>, that adds Tcal or Trec lines to plots,
+reset any plot limit, except the right edge one, if any data to be
+plotted was beyond that edge. This was apparently to allow showing the
+vertical axis intercept of the Trec fit and to make sure that all
+vertical extents of Trec and Tcal curves were not off the visible plot
+area.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>This was fixed by limiting the Tcal curve plotted to just segments
+within the zoomed area. In addition for consistency, the <code>drawValues</code>
+function was change to reset any plot limit that is exceeded by the
+data. Since all other uses of <code>drawValues</code> already limited the
+horizontal values to be plotted to the zoomed area, there was no
+impact on those other uses.</p>
+</div>
+<div class="paragraph">
+<p>Thanks to Eskil Varenius (Onsala), for reporting this issue and
+testing the fix.</p>
+</div>
+</li>
 <li>
 <p>Correct bad Tsys data in <em>gnplt</em> (closing
 <a href="https://github.com/nvi-inc/fs/issues/107">#107</a> and
@@ -1221,7 +1264,7 @@ and references to it.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-08-23 13:28:25 -0400
+Last updated 2021-09-01 16:46:22 -0400
 </div>
 </div>
 </body>
