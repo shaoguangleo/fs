@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.15">
-<meta name="author" content="Version 0.9 - April 2021">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<meta name="author" content="Version 1.0 - September 2021">
 <title>DRAFT FS DBBC3 Operations Manual</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -48,7 +48,7 @@ textarea{overflow:auto;vertical-align:top}
 table{border-collapse:collapse;border-spacing:0}
 *,*::before,*::after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
 html,body{font-size:100%}
-body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;word-wrap:anywhere;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
 a:hover{cursor:pointer}
 img,object,embed{max-width:100%;height:auto}
 object,embed{height:100%}
@@ -63,8 +63,10 @@ img{-ms-interpolation-mode:bicubic}
 img,object,svg{display:inline-block;vertical-align:middle}
 textarea{height:auto;min-height:50px}
 select{width:100%}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
 .subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
-div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
 a{color:#2156a5;text-decoration:underline;line-height:inherit}
 a:hover,a:focus{color:#1d4b8f}
 a img{border:0}
@@ -95,28 +97,28 @@ dl dd{margin-bottom:1.25em}
 abbr,acronym{text-transform:uppercase;font-size:90%;color:rgba(0,0,0,.8);border-bottom:1px dotted #ddd;cursor:help}
 abbr{text-transform:none}
 blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote cite{display:block;font-size:.9375em;color:rgba(0,0,0,.6)}
+blockquote cite::before{content:"\2014 \0020"}
+blockquote cite a,blockquote cite a:visited{color:rgba(0,0,0,.6)}
 blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
 @media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
 h1{font-size:2.75em}
 h2{font-size:2.3125em}
 h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
 h4{font-size:1.4375em}}
-table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede;word-wrap:normal}
+table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
 table thead,table tfoot{background:#f7f8f7}
 table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
 table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
 table tr.even,table tr.alt{background:#f8f8f7}
-table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{line-height:1.6}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
 h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
 h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
-.center{margin-left:auto;margin-right:auto}
-.stretch{width:100%}
 .clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
 .clearfix::after,.float-group::after{clear:both}
-:not(pre).nobreak{word-wrap:normal}
-:not(pre).nowrap{white-space:nowrap}
-:not(pre).pre-wrap{white-space:pre-wrap}
-:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+:not(pre)>code.nobreak{word-wrap:normal}
+:not(pre)>code.nowrap{white-space:nowrap}
 pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
 pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
 pre>code{display:block}
@@ -181,7 +183,7 @@ body.toc2.toc-right{padding-left:0;padding-right:20em}}
 #content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
 #content #toc>:first-child{margin-top:0}
 #content #toc>:last-child{margin-bottom:0}
-#footer{max-width:none;background:rgba(0,0,0,.8);padding:1.25em}
+#footer{max-width:100%;background:rgba(0,0,0,.8);padding:1.25em}
 #footer-text{color:rgba(255,255,255,.8);line-height:1.44}
 #content{margin-bottom:.625em}
 .sect1{padding-bottom:.625em}
@@ -204,7 +206,7 @@ table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font
 .admonitionblock>table td.icon{text-align:center;width:80px}
 .admonitionblock>table td.icon img{max-width:none}
 .admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
-.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6)}
 .admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
 .exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
 .exampleblock>.content>:first-child{margin-top:0}
@@ -214,7 +216,7 @@ table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font
 .sidebarblock>:last-child{margin-bottom:0}
 .sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
 .exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
-.literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
+.literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
 @media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
 @media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
 .literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
@@ -259,21 +261,22 @@ pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
 .quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
 .quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
-.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;font-size:.85rem;text-align:left;margin-right:0}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
+table.tableblock{max-width:100%;border-collapse:separate}
 p.tableblock:last-child{margin-bottom:0}
-td.tableblock>.content{margin-bottom:1.25em;word-wrap:anywhere}
 td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child.sidebarblock{margin-bottom:0}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
-table.grid-all>*>tr>*{border-width:1px}
-table.grid-cols>*>tr>*{border-width:0 1px}
-table.grid-rows>*>tr>*{border-width:1px 0}
+table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
+table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
+table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
+table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px}
+table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0}
+table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
+table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
 table.frame-all{border-width:1px}
-table.frame-ends{border-width:1px 0}
 table.frame-sides{border-width:0 1px}
-table.frame-none>colgroup+*>:first-child>*,table.frame-sides>colgroup+*>:first-child>*{border-top-width:0}
-table.frame-none>:last-child>:last-child>*,table.frame-sides>:last-child>:last-child>*{border-bottom-width:0}
-table.frame-none>*>tr>:first-child,table.frame-ends>*>tr>:first-child{border-left-width:0}
-table.frame-none>*>tr>:last-child,table.frame-ends>*>tr>:last-child{border-right-width:0}
+table.frame-topbot,table.frame-ends{border-width:1px 0}
 table.stripes-all tr,table.stripes-odd tr:nth-of-type(odd),table.stripes-even tr:nth-of-type(even),table.stripes-hover tr:hover{background:#f8f8f7}
 th.halign-left,td.halign-left{text-align:left}
 th.halign-right,td.halign-right{text-align:right}
@@ -282,7 +285,7 @@ th.valign-top,td.valign-top{vertical-align:top}
 th.valign-bottom,td.valign-bottom{vertical-align:bottom}
 th.valign-middle,td.valign-middle{vertical-align:middle}
 table thead th,table tfoot th{font-weight:bold}
-tbody tr th{background:#f7f8f7}
+tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
 tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
 p.tableblock>code:only-child{background:none;padding:0}
 p.tableblock{font-size:1em}
@@ -311,7 +314,6 @@ ol.lowergreek{list-style-type:lower-greek}
 .hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
 td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
 td.hdlist1{font-weight:bold;padding-bottom:1.25em}
-td.hdlist2{word-wrap:anywhere}
 .literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
 .colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
 .colist td:not([class]):first-child img{max-width:none}
@@ -384,7 +386,7 @@ a span.icon>.fa{cursor:inherit}
 .admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
 .admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
 .admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
-.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);-webkit-border-radius:50%;border-radius:50%;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
 .conum[data-value] *{color:#fff!important}
 .conum[data-value]+b{display:none}
 .conum[data-value]::after{content:attr(data-value)}
@@ -411,7 +413,6 @@ thead{display:table-header-group}
 svg{max-width:100%}
 p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
 h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
-#header,#content,#footnotes,#footer{max-width:none}
 #toc,.sidebarblock,.exampleblock>.content{background:none!important}
 #toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
 body.book #header{text-align:center}
@@ -436,11 +437,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
 </head>
-<body class="article">
+<body class="book">
 <div id="header">
 <h1>DRAFT FS DBBC3 Operations Manual</h1>
 <div class="details">
-<span id="author" class="author">Version 0.9 - April 2021</span><br>
+<span id="author" class="author">Version 1.0 - September 2021</span><br>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
@@ -468,6 +469,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_drudg_support">3.4. drudg support</a></li>
 </ul>
 </li>
+<li><a href="#_handling_other_vdif_frame_sizes">Appendix A: Handling other VDIF frame sizes</a>
+<ul class="sectlevel2">
+<li><a href="#_determine_the_other_settings">A.1. Determine the other settings</a></li>
+<li><a href="#_update_the_snap_procedures">A.2. Update the SNAP procedures</a></li>
+<li><a href="#_command_the_devices">A.3. Command the devices</a></li>
+</ul>
+</li>
+<li><a href="#_installation_for_testing">Appendix B: Installation for testing</a>
+<ul class="sectlevel2">
+<li><a href="#_initial_installation_of_the_test_version">B.1. Initial installation of the test version</a></li>
+<li><a href="#_switching_back_to_10_0_0">B.2. Switching back to 10.0.0</a></li>
+<li><a href="#_switching_back_to_the_test_version">B.3. Switching back to the test version</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -476,7 +491,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_introduction">1. Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This document outlines the model for FS operations with the DBBC3.</p>
+<p>This document outlines the model for FS operations with the DBBC3. It also
+contains an appendix <a href="#_installation_for_testing">Installation for testing</a>. The latter provides some
+pointers for installing and will eventually be superseded by the FS updates
+notes for the first release that includes the DBBC3 support described in the
+rest of this document.</p>
 </div>
 </div>
 </div>
@@ -746,8 +765,8 @@ to use the configuration method described here, without requiring a FS update.</
 </div>
 </li>
 <li>
-<p>Execute the normal setup procedure, perhaps <code>setup01</code>, with the <code>force</code>
-parameter, e.g.:</p>
+<p>Execute the normal <code>setup<em>mode</em></code> procedure, perhaps <code>setup01</code>, with the
+<code>force</code> parameter, e.g.:</p>
 <div class="literalblock">
 <div class="content">
 <pre>setup01=force</pre>
@@ -792,6 +811,19 @@ encountered in the schedule.
 </div>
 </li>
 </ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The FS hard codes a VDIF frame size of <code>8000</code>. If a different size is
+needed, please see the <a href="#_handling_other_vdif_frame_sizes">Handling other VDIF frame sizes</a> appendix.
+</td>
+</tr>
+</table>
 </div>
 <div class="sect4">
 <h5 id="_the_details">The details</h5>
@@ -1247,7 +1279,7 @@ information without operator intervention. However, the operator can adjust the
 display using the features described in <a href="#_commands">Commands</a> sub-section below for
 special purposes.</p>
 </div>
-<table class="tableblock frame-all grid-all" style="width: 50%;">
+<table id="geometry" class="tableblock frame-all grid-all" style="width: 50%;">
 <caption class="title">Table 1. Tsys monitor display geometry values</caption>
 <colgroup>
 <col style="width: 50%;">
@@ -2018,10 +2050,447 @@ for DBBC3s:</p>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_handling_other_vdif_frame_sizes">Appendix A: Handling other VDIF frame sizes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The value of <code>8000</code> for the VDIF frame size is hard coded in the FS for the
+DBBC3 and <em>jive5ab</em> (and DBBC2/FiL10G as well). Currently, this is the correct
+value, but some day in the future, different values may be needed. If that
+occurs before the FS is updated to accommodate other values, this section gives
+a recipe for handling it for the DBBC3 and <em>jive5ab</em> until there is a FS
+update. It is a little complicated, but should work. Hopefully, the FS will be
+updated before it is necessary.</p>
+</div>
+<div class="paragraph">
+<p>The basic strategy is to <a href="#_determine_the_other_settings">Determine the other settings</a> needed in the DBBC3
+and <em>jive5ab</em> <code>vdif_frame</code> commands, <a href="#_update_the_snap_procedures">Update the SNAP procedures</a> to contain
+them, and then <a href="#_command_the_devices">Command the devices</a> with the new values. These are all
+described in the following sub-sections.</p>
+</div>
+<div class="paragraph">
+<p>After commanding the new VDIF frame size, the FS will complain that the DBBC3
+<code>vdif_frame</code> payload is not correct when you check the DBBC3 configuration
+(i.e., using the <code>setup<em>mode</em></code> procedure without the <code>force</code> parameter), but
+if that is the only complaint, there should not be a problem.</p>
+</div>
+<div class="paragraph">
+<p>These sub-sections extend the example in the <a href="#_configuring_core3h_boards">Configuring Core3H boards</a>
+sub-section above.</p>
+</div>
+<div class="sect2">
+<h3 id="_determine_the_other_settings">A.1. Determine the other settings</h3>
+<div class="paragraph">
+<p>The settings can be calculated from first principles. However, another way to
+determine them is to use the <code>echo</code> output from the FS for what would otherwise
+be the correct setup:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>proc=r4849kk
+echo=on
+setup01=force
+echo=off</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will need to identify the <code>#dbbcn#core3h=<em>n</em>,vdif_frame &#8230;&#8203;</code> and
+<code>#mk5cn#VDIF_8000-&#8230;&#8203;</code> records in the output and use the values recorded in the
+next sub-section.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_update_the_snap_procedures">A.2. Update the SNAP procedures</h3>
+<div class="paragraph">
+<p>These examples use <code>8200</code> as an example different frame size.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Caution</div>
+</td>
+<td class="content">
+The examples below do not necessarily contain correct values. They are
+just offered to show the form of the commands.
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>You will need to create a new SNAP procedure, perhaps called <code>vdif_8200</code>,
+that contains all the other values in the <code>core3h=<em>n</em>,vdif_frame &#8230;&#8203;</code> commands
+recorded in the previous section, but with the new frame size, for example:</p>
+<div class="literalblock">
+<div class="content">
+<pre>dbbc3=core3h=1,vdif_frame 2 8 8200 ct=off
+dbbc3=core3h=2,vdif_frame 2 8 8200 ct=off
+dbbc3=core3h=3,vdif_frame 2 8 8200 ct=off
+dbbc3=core3h=4,vdif_frame 2 8 8200 ct=off
+dbbc3=core3h=5,vdif_frame 2 8 8200 ct=off
+dbbc3=core3h=6,vdif_frame 2 8 8200 ct=off
+dbbc3=core3h=7,vdif_frame 2 8 8200 ct=off
+dbbc3=core3h=8,vdif_frame 2 8 8200 ct=off</pre>
+</div>
+</div>
+</li>
+<li>
+<p>You can add a new <code>VDIF_&#8230;&#8203;</code> command with the other recorded values, but with
+the new frame size, to the <code>setup<em>mode</em></code>  procedure (<code>setup01</code> in this
+example) <em>after</em> the call to <code>jive5ab_cnfg</code>. For example, add the command:</p>
+<div class="literalblock">
+<div class="content">
+<pre>jive5ab=VDIF_8200-8192-2-8</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Not putting this command directly into your <code>jive5ab_cnfg</code> procedure
+allows it to be mode specific. If you want to apply this change universally,
+you can put it into your <code>jive5ab_cnfg</code> procedure instead, but be wary of other
+modes.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_command_the_devices">A.3. Command the devices</h3>
+<div class="paragraph">
+<p>Continuing the example, enter:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>proc=r4849kk
+setup01=force
+vdif_8200</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Afterwards, you will need to sync the time as described in the <a href="#_time_sync">Time sync</a>
+sub-section above and start the data transmission as described in the
+<a href="#_starting_data_transmission">Starting data transmission</a> sub-section above.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The reason the setting of the VDIF frame size is done <em>outside</em> of the
+<code>setup<em>mode</em></code> procedure is so that when that procedure is used to <em>check</em> the
+DBBC3 configuration, the <code>dbbc3=core3h=<em>n</em>,vdif_frame &#8230;&#8203;</code> commands won&#8217;t cause
+a requirement to re-sync the DBBC3.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_installation_for_testing">Appendix B: Installation for testing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section has some terse installation notes for installing the FS branch,
+<code>ed/dbbc3</code>, that provides the features described in this document. This is
+provided only to help with testing. This is not for an operational release.</p>
+</div>
+<div class="paragraph">
+<p>Sub-sections on <a href="#_switching_back_to_10_0_0">Switching back to 10.0.0</a> and <a href="#Switching back to the test
+version">[Switching back to the test
+version]</a> as also provided in case you need to switch back and forth after
+using the <a href="#_initial_installation_of_the_test_version">Initial installation of the test version</a> sub-section.</p>
+</div>
+<div class="sect2">
+<h3 id="_initial_installation_of_the_test_version">B.1. Initial installation of the test version</h3>
+<div class="paragraph">
+<p>You must have FS 10.0.0 installed before installing the test version. Please
+see <a href="https://nvi-inc.github.io/fs/releases/10/0/10.0.0.html" class="bare">https://nvi-inc.github.io/fs/releases/10/0/10.0.0.html</a> for instructions for
+installing FS 10.0.0.</p>
+</div>
+<div class="sect3">
+<h4 id="_fetch_and_make_the_latest_commit_on_the_branch">B.1.1. Fetch and make the latest commit on the branch</h4>
+<div class="paragraph">
+<p>If you are using <em>git</em>, as is recommended, then as <em>prog</em>
+execute:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>cd /usr2/fs-git
+git fetch
+git checkout ed/dbbc3
+make clean rmdoto rmexe
+make &gt;&amp; /dev/null
+make -s</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No output from the last command indicates a successful <em>make</em>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+It should not be necessary to re<em>make</em> your station software.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_reboot">B.1.2. Reboot</h4>
+<div class="paragraph">
+<p>This will make sure the FS server is restarted and shared memory is
+reinitialized.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_additional_steps">B.1.3. Additional steps</h4>
+<div class="paragraph">
+<p>Except as noted, these steps should all be performed as <em>oper</em>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install the <em>dbbc3.ctl</em> control file.</p>
+<div class="paragraph">
+<p>The contents of DBBC3 line in the <em>equip.ctl</em> control file has been moved to
+the new control file, <em>dbbc3.ctl</em>, and reorganized. To install the new file,
+execute:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>cd /usr2/control
+cp /usr2/fs/st.default/control/dbbc3.ctl .</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Edit and customize the contents of your local copy in <em>/usr2/control</em> to agree
+with your DBBC3.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+For now, your old DBBC3 line in <em>equip.ctl</em> can be left in place. Its
+presence will be benign and leaving it there will make it easier to return your
+operational FS version when that is needed. The values in the <em>dbbc3.ctl</em>
+control file are the ones actually used by this test branch of the FS.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Update <em>equip.ctl</em></p>
+<div class="paragraph">
+<p>Change your rack type to <code>dbbc3_ddc_u</code> or <code>dbbc3_ddc_v</code> as appropriate.</p>
+</div>
+</li>
+<li>
+<p>Setup the DBBC3 Tsys display window (<em>monit7</em>)</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Update <em>clpgm.ctl</em></p>
+<div class="paragraph">
+<p>Compare your local copy to the example</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>cd /usr2/control
+diff clpgm.ctl /usr2/fs/st.default/control/ | less</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and consider whether and what changes you should make. Typically, the new line
+for <em>monit7</em> would be added to your local copy.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+If you are familiar with <em>vimdiff</em>, you may find it a more convenient way
+to compare files and update your local copy. Like <em>vim</em>, <em>vimdiff</em> may be
+challenging to use until you are familiar with it. Some help is available from
+web searches. Don&#8217;t use it if you aren&#8217;t comfortable with it.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Update <em>stpgm.ctl</em></p>
+<div class="paragraph">
+<p>If you are using the display server and you want to have <em>monit7</em> start
+automatically with each client (including at FS start up), add a line for it to
+<em>stpgm.ctl</em>. The easiest way to do this is to make a copy of the line for
+<em>monit2</em> and update for <em>monit7</em> (changing <code>2</code>s to <code>7</code>s). If you don&#8217;t have
+a line for <em>monit2</em> in your <em>stpgm.ctl</em>, you can use the one in the example
+file, <em>/usr2/fs/st.default/control/stpgm.ctl</em>, as a guide.</p>
+</div>
+</li>
+<li>
+<p>Update your local rc files:</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>Update <em>~/.Xresources</em></p>
+<div class="paragraph">
+<p>Append the new lines from the default version:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>cd ~
+tail -n 2 /usr2/fs/st.default/oper/.Xresources &gt;&gt;.Xresources</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The default geometry resource in <em>/usr2/fs/st.default/oper/.Xresources</em>
+for <em>monit7</em> handles having up to 16 BBCs per IF.  If you have fewer, you might
+want to adjust the resource in your local file according to the <a href="#geometry">Tsys
+monitor display geometry values</a> table above.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>If you use the default window manager for the console, update <em>~/.fvwm2rc</em>:</p>
+<div class="paragraph">
+<p>Compare your local file to the default</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>cd ~
+diff .Xresources /usr2/fs/st.default/oper |less</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The new lines for <em>monit7</em> should be added to your local file.</p>
+</div>
+</li>
+<li>
+<p>You should  make the corresponding changes for <em>prog</em> while logged
+in as <em>prog</em>.</p>
+</li>
+<li>
+<p>Log out and back in to put these changes into effect.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_switching_back_to_10_0_0">B.2. Switching back to 10.0.0</h3>
+<div class="paragraph">
+<p>Once you have the <code>ed/dbbc3</code> your can return to using <em>10.0.0</em> by following
+these steps.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>As <em>prog</em>, enter:</p>
+<div class="literalblock">
+<div class="content">
+<pre>cd /usr2/fs-git
+git checkout -q 10.0.0
+make clean rmdoto rmexe
+make &gt;&amp; /dev/null
+make -s</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Reboot</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+If you added <em>monit7</em> to your <em>stpgm.ctl</em> file, you can comment it out
+(as <em>oper</em>), but that is not necessary.  The only consequence of not doing so
+will be a &#8220;flash&#8221; when the display client starts as an <em>xterm</em> and then it
+closes because it can&#8217;t start <em>monit7</em>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_switching_back_to_the_test_version">B.3. Switching back to the test version</h3>
+<div class="paragraph">
+<p>If you have switched back to <em>10.0.0</em> and now want to switch back to the test
+version, please follow these steps.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>As <em>prog</em>, enter:</p>
+<div class="literalblock">
+<div class="content">
+<pre>cd /usr2/fs-git
+git checkout ed/dbbc3
+make clean rmdoto rmexe
+make &gt;&amp; /dev/null
+make -s</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Reboot</p>
+</li>
+<li>
+<p>If as part of switching back to <em>10.0.0</em>, you had commented out the <em>monit7</em>
+line in your <em>stpgm.ctl</em> file, you can uncomment it (as <em>oper</em>).</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-08-26 12:14:25 -0400
+Last updated 2021-09-06 16:59:19 -0400
 </div>
 </div>
 </body>
