@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<meta name="author" content="Version 1.0 - September 2021">
+<meta name="author" content="Version 1.1 - September 2021">
 <title>DRAFT FS DBBC3 Operations Manual</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -441,7 +441,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>DRAFT FS DBBC3 Operations Manual</h1>
 <div class="details">
-<span id="author" class="author">Version 1.0 - September 2021</span><br>
+<span id="author" class="author">Version 1.1 - September 2021</span><br>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
@@ -1572,12 +1572,23 @@ command:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>To restart the error reports, <em>tpicd</em> should be configured and started.</p>
+<p>To restart the error reports, <em>tpicd</em> should be configured and started. Any
+<em>drudg</em> generated <code>setup</code> procedure will do this.</p>
 </div>
 <div class="paragraph">
-<p>When <em>drudg</em> generated setup procedures are executing they will suppress these
-errors because they use this command as they start. As a setup procedure
-finishes, it will restart <em>tpicd</em>.</p>
+<p>When <em>drudg</em> generated <code>setup</code> procedures are executing they will suppress
+these errors because they use <code>tpcid=stop</code> when they start. As a <code>setup</code>
+procedure finishes, it will restart <em>tpicd</em>.</p>
+</div>
+<div class="paragraph">
+<p>This method can also be used to suppress multicast errors for equipment
+monitoring in the <code>midob</code> procedure. That is, group all the commands that cause
+multicast errors together and place them after a <code>tpcid=stop</code> and follow them
+with a <code>tpcid</code>. This should not cause a significant, if any, additional loss of
+logged multicast data. The losses may be unacceptable in any event,
+particularly for very short scans. In that case, the commands that cause these
+errors should probably not be included <code>midob</code> at all. The <code>mcast_time</code> command
+can be used to monitor the DBBC3 time without generating any of these errors.</p>
 </div>
 </td>
 </tr>
@@ -2490,7 +2501,7 @@ line in your <em>stpgm.ctl</em> file, you can uncomment it (as <em>oper</em>).</
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-09-06 16:59:19 -0400
+Last updated 2021-09-07 17:36:34 -0400
 </div>
 </div>
 </body>
