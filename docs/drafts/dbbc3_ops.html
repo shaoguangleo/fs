@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<meta name="author" content="Version 1.1 - September 2021">
+<meta name="author" content="Version 1.3 - September 2021">
 <title>DRAFT FS DBBC3 Operations Manual</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -441,7 +441,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>DRAFT FS DBBC3 Operations Manual</h1>
 <div class="details">
-<span id="author" class="author">Version 1.1 - September 2021</span><br>
+<span id="author" class="author">Version 1.3 - September 2021</span><br>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
@@ -469,7 +469,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_drudg_support">3.4. drudg support</a></li>
 </ul>
 </li>
-<li><a href="#_handling_other_vdif_frame_sizes">Appendix A: Handling other VDIF frame sizes</a>
+<li><a href="#_handling_other_vdif_frame_payload_sizes">Appendix A: Handling other VDIF frame payload sizes</a>
 <ul class="sectlevel2">
 <li><a href="#_determine_the_other_settings">A.1. Determine the other settings</a></li>
 <li><a href="#_update_the_snap_procedures">A.2. Update the SNAP procedures</a></li>
@@ -819,8 +819,9 @@ encountered in the schedule.
 <div class="title">Note</div>
 </td>
 <td class="content">
-The FS hard codes a VDIF frame size of <code>8000</code>. If a different size is
-needed, please see the <a href="#_handling_other_vdif_frame_sizes">Handling other VDIF frame sizes</a> appendix.
+The FS hard codes a VDIF frame payload size of <code>8000</code>. If a different
+size is needed, please see the <a href="#_handling_other_vdif_frame_payload_sizes">Handling other VDIF frame payload sizes</a>
+appendix.
 </td>
 </tr>
 </table>
@@ -1787,26 +1788,28 @@ command and a <code>thread<em>suffix</em></code> procedure.</p>
 <div class="sect3">
 <h4 id="_default_configuration">3.3.1. Default configuration</h4>
 <div class="paragraph">
-<p>The <code>mk5c_mode</code>/<code>fb_mode</code> command sends the follow commands depending on
-whether the recorder selected in <em>equip.ctl</em> is <code>mk5c</code> or <code>flexbuff</code>. It does
-<em>not</em> depend on which command is used; <code>fb_mode</code> is just an alias for
-<code>mk5c_mode</code>. It does depend on the data type, VDIF or 5B/Ethernet. Thus there
-are two options for each recorder type. These are given below.</p>
+<p>The <code>mk5c_mode</code>/<code>fb_mode</code> command sends the configuration commands, beyond
+<code><em>mode</em></code>,  depending on which recorder is selected in <em>equip.ctl</em>, <code>mk5c</code> or
+<code>flexbuff</code>, and the total data rate. It does <em>not</em> depend on which command is
+used; <code>fb_mode</code> is just an alias for <code>mk5c_mode</code>. The commands sent also depend
+on the data type, VDIF or 5B/Ethernet. All the cases are listed below.</p>
 </div>
 <div class="sect4">
 <h5 id="_flexbuff_recorder">FlexBuff recorder</h5>
-<div class="paragraph">
-<p>For FlexBuff recorders, there is a variable field <code><em>socketbuffer</em></code> in the
-<code>net_protocol</code> command sent to the recorder.</p>
-</div>
 <div class="olist arabic">
 <ol class="arabic">
+<li>
+<p>Setting <code>mtu</code>:</p>
+<div class="paragraph">
+<p>The <code>mtu</code> command sent to the recorder depends on the data type:</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
 <li>
 <p>VDIF data</p>
 <div class="literalblock">
 <div class="content">
-<pre>mtu = 9000 ;
-net_protocol = udpsnor : <em>socketbuffer</em> : 256000000 : 4 ;</pre>
+<pre>mtu = 9000 ;</pre>
 </div>
 </div>
 </li>
@@ -1814,12 +1817,23 @@ net_protocol = udpsnor : <em>socketbuffer</em> : 256000000 : 4 ;</pre>
 <p>5B/Ethernet data</p>
 <div class="literalblock">
 <div class="content">
-<pre>mtu = 6000 ;
-net_protocol = udpsnor : <em>socketbuffer</em> : 256000000 : 4 ;</pre>
+<pre>mtu = 6000 ;</pre>
 </div>
 </div>
 </li>
 </ol>
+</div>
+</li>
+<li>
+<p>Setting <code>net_protocol</code>:</p>
+<div class="paragraph">
+<p>There is a variable field <code><em>socketbuffer</em></code> in the <code>net_protocol</code> command sent
+to the recorder. Its value is independent of the data type.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>net_protocol = udpsnor : _socketbuffer_ : 256000000 : 4 ;</pre>
+</div>
 </div>
 <div class="paragraph">
 <p>Where the <em>socketbuffer</em> field depends on the total data rate:</p>
@@ -1846,17 +1860,54 @@ values appropriate for that. This assumes that the FlexBuff has been tuned
 tuning documentation at
 <a href="https://www.jive.eu/~verkout/flexbuff/flexbuf.recording.txt" class="bare">https://www.jive.eu/~verkout/flexbuff/flexbuf.recording.txt</a>.</p>
 </div>
+</li>
+<li>
+<p>Setting <code>record = nthread</code>:</p>
+<div class="paragraph">
+<p>There is a variable field <code><em>nWriters</em></code> in the <code>record = nthread</code> command sent
+to the recorder. Its value is independent of the data type.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>record = nthread : <em>nWriters</em> ;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where <code><em>nWriters</em></code> is calculated as <code>max( <em>data_rate</em> / 6 + 1, 2)</code> and
+<code><em>data_rate</em></code> is the total data rate in Gbps.</p>
+</div>
+</li>
+</ol>
+</div>
 </div>
 <div class="sect4">
 <h5 id="_mark_5c_recorder">Mark 5C recorder</h5>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
+<p>Setting <code>net_protocol</code>:</p>
+<div class="paragraph">
+<p>The <code>net_protocol</code> command sent to the recorder is independent of the data
+type:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>net_protocol = : 128k : 2M : 4;</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Setting <code>packet</code>:</p>
+<div class="paragraph">
+<p>The <code>packet</code> command sent to the recorder depends on the data type:</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
 <p>VDIF data</p>
 <div class="literalblock">
 <div class="content">
-<pre>net_protocol = : 128k : 2M : 4;
-packet = 36 : 0 : 8032 : 0 : 0 ;</pre>
+<pre>packet = 36 : 0 : 8032 : 0 : 0 ;</pre>
 </div>
 </div>
 </li>
@@ -1864,9 +1915,11 @@ packet = 36 : 0 : 8032 : 0 : 0 ;</pre>
 <p>5B/Ethernet data</p>
 <div class="literalblock">
 <div class="content">
-<pre>net_protocol = : 128k : 2M : 4;
-packet = 36 : 0 : 5008 : 0 : 0 ;</pre>
+<pre>packet = 36 : 0 : 5008 : 0 : 0 ;</pre>
 </div>
+</div>
+</li>
+</ol>
 </div>
 </li>
 </ol>
@@ -2062,16 +2115,16 @@ for DBBC3s:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_handling_other_vdif_frame_sizes">Appendix A: Handling other VDIF frame sizes</h2>
+<h2 id="_handling_other_vdif_frame_payload_sizes">Appendix A: Handling other VDIF frame payload sizes</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The value of <code>8000</code> for the VDIF frame size is hard coded in the FS for the
-DBBC3 and <em>jive5ab</em> (and DBBC2/FiL10G as well). Currently, this is the correct
-value, but some day in the future, different values may be needed. If that
-occurs before the FS is updated to accommodate other values, this section gives
-a recipe for handling it for the DBBC3 and <em>jive5ab</em> until there is a FS
-update. It is a little complicated, but should work. Hopefully, the FS will be
-updated before it is necessary.</p>
+<p>The value of <code>8000</code> for the VDIF frame payload size is hard coded in the FS for
+the DBBC3 and <em>jive5ab</em> (and DBBC2/FiL10G as well). Currently this is the
+correct value, but some day in the future, different values may be needed. If
+that occurs before the FS is updated to accommodate other values, this section
+gives a recipe for handling it for the DBBC3 and <em>jive5ab</em> in the meantime.  It
+is a little complicated, but should work. Hopefully, the FS will be updated
+before it is necessary.</p>
 </div>
 <div class="paragraph">
 <p>The basic strategy is to <a href="#_determine_the_other_settings">Determine the other settings</a> needed in the DBBC3
@@ -2080,10 +2133,10 @@ them, and then <a href="#_command_the_devices">Command the devices</a> with the 
 described in the following sub-sections.</p>
 </div>
 <div class="paragraph">
-<p>After commanding the new VDIF frame size, the FS will complain that the DBBC3
-<code>vdif_frame</code> payload is not correct when you check the DBBC3 configuration
-(i.e., using the <code>setup<em>mode</em></code> procedure without the <code>force</code> parameter), but
-if that is the only complaint, there should not be a problem.</p>
+<p>After commanding a different VDIF payload size, the FS will complain that the
+DBBC3 <code>vdif_frame</code> payload is not correct when you check the DBBC3
+configuration (i.e., using the <code>setup<em>mode</em></code> procedure without the <code>force</code>
+parameter), but if that is the only complaint, there should not be a problem.</p>
 </div>
 <div class="paragraph">
 <p>These sub-sections extend the example in the <a href="#_configuring_core3h_boards">Configuring Core3H boards</a>
@@ -2113,7 +2166,7 @@ next sub-section.</p>
 <div class="sect2">
 <h3 id="_update_the_snap_procedures">A.2. Update the SNAP procedures</h3>
 <div class="paragraph">
-<p>These examples use <code>8200</code> as an example different frame size.</p>
+<p>These examples use <code>8200</code> as an example different payload size.</p>
 </div>
 <div class="admonitionblock caution">
 <table>
@@ -2133,7 +2186,7 @@ just offered to show the form of the commands.
 <li>
 <p>You will need to create a new SNAP procedure, perhaps called <code>vdif_8200</code>,
 that contains all the other values in the <code>core3h=<em>n</em>,vdif_frame &#8230;&#8203;</code> commands
-recorded in the previous section, but with the new frame size, for example:</p>
+recorded in the previous section, but with the new payload size, for example:</p>
 <div class="literalblock">
 <div class="content">
 <pre>dbbc3=core3h=1,vdif_frame 2 8 8200 ct=off
@@ -2149,7 +2202,7 @@ dbbc3=core3h=8,vdif_frame 2 8 8200 ct=off</pre>
 </li>
 <li>
 <p>You can add a new <code>VDIF_&#8230;&#8203;</code> command with the other recorded values, but with
-the new frame size, to the <code>setup<em>mode</em></code>  procedure (<code>setup01</code> in this
+the new payload size, to the <code>setup<em>mode</em></code>  procedure (<code>setup01</code> in this
 example) <em>after</em> the call to <code>jive5ab_cnfg</code>. For example, add the command:</p>
 <div class="literalblock">
 <div class="content">
@@ -2199,7 +2252,7 @@ sub-section above and start the data transmission as described in the
 <div class="title">Note</div>
 </td>
 <td class="content">
-The reason the setting of the VDIF frame size is done <em>outside</em> of the
+The reason the setting of the VDIF payload size is done <em>outside</em> of the
 <code>setup<em>mode</em></code> procedure is so that when that procedure is used to <em>check</em> the
 DBBC3 configuration, the <code>dbbc3=core3h=<em>n</em>,vdif_frame &#8230;&#8203;</code> commands won&#8217;t cause
 a requirement to re-sync the DBBC3.
@@ -2314,6 +2367,33 @@ control file are the ones actually used by this test branch of the FS.
 <p>Update <em>equip.ctl</em></p>
 <div class="paragraph">
 <p>Change your rack type to <code>dbbc3_ddc_u</code> or <code>dbbc3_ddc_v</code> as appropriate.</p>
+</div>
+</li>
+<li>
+<p>Add <code>jive5ab_cnfg</code> procedure to your <code>station</code> procedure library.</p>
+<div class="paragraph">
+<p>Using <em>pfmed</em>, add a <code>jive5ab_cnfg</code> procedure to your <code>station</code> procedure
+library. It can be empty if no tuning is needed for your recorder.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+This procedure is called by setup procedures for Mark 5C and FlexBuff
+recorders and provides a means to tune the setup of <em>jive5ab</em> for your hardware
+independent of the observing mode. This procedure is called after the
+<code>mk5c_mode</code>/<code>fb_mode</code> commands to allow the default configuration to be
+overridden. The default configuration is described in the
+<a href="#_default_configuration">Default configuration</a> subsection in main part of this document.
+The commands in this procedure should be mode independent. Mode dependent
+tuning should be handled differently; perhaps by inserting commands directly
+at the top-level of the setup procedure.
+</td>
+</tr>
+</table>
 </div>
 </li>
 <li>
@@ -2501,7 +2581,7 @@ line in your <em>stpgm.ctl</em> file, you can uncomment it (as <em>oper</em>).</
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-09-07 17:36:34 -0400
+Last updated 2021-09-23 11:15:44 -0400
 </div>
 </div>
 </body>
